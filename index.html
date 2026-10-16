@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <!-- Collegamento al Manifest della PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FF8DA1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bambocchan Care</title>
+
+    <!-- Unica risorsa esterna: font Nunito e icone Material Symbols Rounded -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* === VARIABILI (colori, font, raggi, ombre) === */
+        :root {
+            --color-page: #f3ece3;
+            /* sfondo fuori dall'app (schermi grandi) */
+            --color-bg: #fbf7f1;
+            /* sfondo dell'app */
+            --color-card: #ffffff;
+            /* sfondo delle card */
+            --color-text: #2a2422;
+            /* testo principale */
+            --color-text-soft: #6f6560;
+            /* testo secondario */
+            --color-rose: #d4808c;
+            /* rosa principale */
+            --color-rose-soft: #fdeef0;
+            /* rosa chiaro (sfondi) */
+            --color-gold: #d79a5b;
+            /* arancio/oro per le etichette */
+            --color-gold-soft: #fbf1e4;
+            /* oro chiaro (sfondi) */
+            --color-track: #f0e8e1;
+            /* barre vuote */
+            --color-border: #f3e9e4;
+            /* bordi leggeri */
+
+            --font-main: "Nunito", system-ui, sans-serif;
+
+            --radius-card: 20px;
+            --radius-box: 16px;
+            --radius-pill: 999px;
+
+            --shadow-card: 0 4px 14px rgba(120, 90, 70, 0.08);
+            --shadow-button: 0 6px 16px rgba(212, 128, 140, 0.35);
+        }
+
+        /* === BASE === */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--color-text);
+            background: var(--color-page);
+        }
+
+        button {
+            font-family: inherit;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Classe per le icone Material Symbols */
+        .material-symbols-rounded {
+            font-family: "Material Symbols Rounded";
+            font-weight: normal;
+            font-style: normal;
+            line-height: 1;
+            display: inline-block;
+            user-select: none;
+        }
+
+        /* === CONTENITORE APP (max 420px, centrato) === */
+        .app {
+            max-width: 420px;
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 20px 18px 28px;
+            background: var(--color-bg);
+        }
+
+        /* === HEADER === */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 22px;
+        }
+
+        .header__title {
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .header__subtitle {
+            margin-top: 4px;
+            font-size: 16px;
+            color: var(--color-text-soft);
+        }
+
+        .header__profile {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--color-card);
+            color: var(--color-rose);
+            box-shadow: var(--shadow-card);
+        }
+
+        /* === SELETTORE GIORNI === */
+        .days {
+            display: flex;
+            gap: 6px;
+            margin-top: 22px;
+        }
+
+        .day {
+            flex: 1;
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            border-radius: var(--radius-box);
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-card);
+            font-size: 12px;
+            color: var(--color-text-soft);
+        }
+
+        .day__number {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        /* Giorno attivo: rosa pieno */
+        .day.is-active {
+            background: var(--color-rose);
+            border-color: var(--color-rose);
+            color: #ffffff;
+        }
+
+        .day.is-active .day__number {
+            color: #ffffff;
+        }
+
+        /* === CARD PROGRESSO === */
+        .progress {
+            margin-top: 20px;
+            padding: 18px 18px 20px;
+            border-radius: var(--radius-card);
+            background: var(--color-card);
+            box-shadow: var(--shadow-card);
+        }
+
+        .progress__top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .label {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+        }
+
+        .progress__badge {
+            padding: 5px 12px;
+            border-radius: var(--radius-pill);
+            background: var(--color-rose-soft);
+            color: var(--color-rose);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .progress__middle {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-top: 14px;
+        }
+
+        .progress__counter {
+            font-size: 21px;
+            font-weight: 800;
+        }
+
+        .progress__day {
+            font-size: 14px;
+            color: var(--color-text-soft);
+        }
+
+        /* Barre a segmenti (una per ogni prodotto) */
+        .progress__bar {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .progress__segment {
+            flex: 1;
+            height: 8px;
+            border-radius: var(--radius-pill);
+            background: var(--color-track);
+        }
+
+        .progress__segment.is-filled {
+            background: var(--color-rose);
+        }
+
+        /* === CHECKLIST === */
+        .checklist {
+            margin-top: 24px;
+        }
+
+        .checklist__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .checklist__title {
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-text-soft);
+        }
+
+        .checklist__today {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--color-rose);
+        }
+
+        .checklist__list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Singola card prodotto */
+        .product {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            border-radius: var(--radius-card);
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-card);
+        }
+
+        .product__info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* min-width serve per tagliare il testo lungo con "..." */
+        .product__category {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+        }
+
+        .product__name {
+            margin-top: 2px;
+            font-size: 16px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product__meta {
+            margin-top: 4px;
+            font-size: 13px;
+            color: var(--color-text-soft);
+        }
+
+        .product__dot {
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            margin: 0 4px 2px;
+            border-radius: 50%;
+            background: var(--color-text-soft);
+        }
+
+        .product__menu {
+            color: var(--color-text-soft);
+            display: flex;
+        }
+
+        /* Riquadro icona del prodotto */
+        .product__icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            font-size: 24px;
+        }
+
+        .product__icon--pink {
+            background: var(--color-rose-soft);
+            color: var(--color-rose);
+        }
+
+        .product__icon--gold {
+            background: var(--color-gold-soft);
+            color: var(--color-gold);
+        }
+
+        /* Checkbox personalizzata: l'input vero è nascosto, si vede solo il cerchio */
+        .check {
+            cursor: pointer;
+            display: flex;
+        }
+
+        .check__input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .check__circle {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 2px solid #f1d9dc;
+            color: transparent;
+            /* spunta invisibile quando non usato */
+            font-size: 16px;
+            transition: background 0.15s, border-color 0.15s;
+        }
+
+        .check__input:checked+.check__circle {
+            background: var(--color-rose);
+            border-color: var(--color-rose);
+            color: #ffffff;
+            /* spunta visibile quando usato */
+        }
+
+        /* Accessibilità: bordo visibile quando si naviga con la tastiera */
+        .check__input:focus-visible+.check__circle {
+            outline: 2px solid var(--color-rose);
+            outline-offset: 2px;
+        }
+
+        /* Card prodotto "usato" */
+        .product.is-done {
+            border-color: #f3ccd1;
+        }
+
+        /* === NOME PRODOTTO MODIFICABILE === */
+        .name-input {
+            display: block;
+            width: 100%;
+            font-family: inherit;
+            color: inherit;
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed transparent;
+            /* invisibile finché non ci passi sopra */
+            padding: 0;
+        }
+
+        .name-input:hover {
+            border-bottom-color: var(--color-border);
+        }
+
+        .name-input:focus {
+            outline: none;
+            border-bottom: 1px solid var(--color-rose);
+        }
+
+        /* === SELETTORE ORARIO === */
+        .time-input {
+            font-family: inherit;
+            font-size: 13px;
+            color: var(--color-text-soft);
+            background: var(--color-rose-soft);
+            border: none;
+            border-radius: 8px;
+            padding: 2px 6px;
+            cursor: pointer;
+        }
+
+        /* === PULSANTE AGGIUNGI === */
+        .add-button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: var(--radius-pill);
+            background: var(--color-rose);
+            color: #ffffff;
+            font-size: 17px;
+            font-weight: 800;
+            box-shadow: var(--shadow-button);
+        }
+
+        .add-button:active {
+            transform: scale(0.98);
+        }
+
+        /* === PULSANTE NOTIFICHE === */
+        .notify-button {
+            width: 100%;
+            margin-top: 12px;
+            padding: 14px;
+            border-radius: var(--radius-pill);
+            background: var(--color-card);
+            border: 2px solid var(--color-rose);
+            color: var(--color-rose);
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .notify-button:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        /* === FINESTRA "NUOVO PRODOTTO" === */
+        .dialog {
+            margin: auto;
+            /* serve per centrarla (il reset in alto lo azzera) */
+            width: calc(100% - 36px);
+            max-width: 380px;
+            padding: 22px 20px;
+            border: none;
+            border-radius: var(--radius-card);
+            background: var(--color-card);
+            color: var(--color-text);
+            font-family: inherit;
+            box-shadow: 0 10px 30px rgba(42, 36, 34, 0.25);
+        }
+
+        .dialog::backdrop {
+            background: rgba(42, 36, 34, 0.45);
+        }
+
+        .dialog__title {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .field {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--color-text-soft);
+        }
+
+        .field__input {
+            display: block;
+            width: 100%;
+            margin-top: 4px;
+            padding: 10px 12px;
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--color-text);
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+        }
+
+        .field__input:focus {
+            outline: 2px solid var(--color-rose);
+            border-color: transparent;
+        }
+
+        .dialog__buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .dialog__button {
+            flex: 1;
+            padding: 12px;
+            border-radius: var(--radius-pill);
+            border: 2px solid var(--color-rose);
+            color: var(--color-rose);
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .dialog__button--primary {
+            background: var(--color-rose);
+            color: #ffffff;
+        }
+
+        /* === PROMEMORIA === */
+        .reminder {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: var(--radius-box);
+            background: #fdf4e8;
+            border: 1px solid #f3e3cf;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .reminder__icon {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--color-card);
+            font-size: 20px;
+        }
+
+        /* === MESSAGGIO LISTA VUOTA === */
+        .empty-message {
+            padding: 22px 14px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--color-text-soft);
+            background: var(--color-card);
+            border: 1px dashed var(--color-border);
+            border-radius: var(--radius-card);
+        }
+
+        /* === FOTO PRODOTTO === */
+        .product__photo-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px dashed var(--color-border);
+            background: var(--color-card-subtle, #fff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            flex-shrink: 0;
+            color: var(--color-text-soft);
+            transition: all 0.2s ease;
+        }
+
+        .product__photo-btn:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .product__thumb {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Contenitore principale dell'app -->
+    <div class="app">
+
+        <!-- === HEADER: titolo, saluto e pulsante profilo === -->
+        <header class="header">
+            <div>
+                <h1 class="header__title">Bambocchan Care</h1>
+                <p class="header__subtitle">salve, cucciola!</p>
+            </div>
+            <button class="header__profile" aria-label="Profilo">
+                <span class="material-symbols-rounded">person</span>
+            </button>
+        </header>
+
+        <main>
+            <!-- === SELETTORE GIORNI: un pulsante per ogni giorno (i numeri li scrive il JavaScript) === -->
+            <section class="days" aria-label="Giorni della settimana">
+                <button class="day"><span>Lun</span><span class="day__number"></span></button>
+                <button class="day"><span>Mar</span><span class="day__number"></span></button>
+                <button class="day"><span>Mer</span><span class="day__number"></span></button>
+                <button class="day"><span>Gio</span><span class="day__number"></span></button>
+                <button class="day"><span>Ven</span><span class="day__number"></span></button>
+                <button class="day"><span>Sab</span><span class="day__number"></span></button>
+                <button class="day"><span>Dom</span><span class="day__number"></span></button>
+            </section>
+
+            <!-- === CARD PROGRESSO: contatore, percentuale e barre (le barre le crea il JavaScript) === -->
+            <section class="progress" aria-label="Progresso beauty routine">
+                <div class="progress__top">
+                    <h2 class="label">Progresso beauty routine</h2>
+                    <span class="progress__badge" id="percent-text">0%</span>
+                </div>
+                <div class="progress__middle">
+                    <p class="progress__counter" id="counter-text">0 / 0 prodotti usati</p>
+                    <p class="progress__day" id="day-name"></p>
+                </div>
+                <div class="progress__bar" id="progress-bar"></div>
+            </section>
+
+            <!-- === CHECKLIST GIORNALIERA (le card dei prodotti le crea il JavaScript) === -->
+            <section class="checklist" aria-label="Checklist giornaliera">
+                <div class="checklist__header">
+                    <h2 class="checklist__title">Checklist giornaliera</h2>
+                    <span class="checklist__today" id="today-label">Oggi</span>
+                </div>
+
+                <ul class="checklist__list" id="product-list"></ul>
+            </section>
+
+            <!-- === PULSANTE AGGIUNGI PRODOTTO === -->
+            <button class="add-button" id="add-button">+ Aggiungi / Scansiona prodotto</button>
+
+            <!-- === PULSANTE NOTIFICHE === -->
+            <button class="notify-button" id="notify-button">🔔 Attiva notifiche</button>
+
+            <!-- === PROMEMORIA === -->
+            <section class="reminder" aria-label="Promemoria">
+                <span class="reminder__icon">🔔</span>
+                <p>Occhio bamboccia: Domani ore 21:30 - Scrub Capelli</p>
+            </section>
+        </main>
+    </div>
+
+    <!-- === FINESTRA "NUOVO PRODOTTO": si apre con il pulsante Aggiungi === -->
+    <dialog class="dialog" id="add-dialog" aria-labelledby="dialog-title">
+        <form id="add-form">
+            <h2 class="dialog__title" id="dialog-title">Nuovo prodotto</h2>
+
+            <label class="field">Nome del prodotto
+                <input class="field__input" type="text" id="new-name" maxlength="40" required
+                    placeholder="Es. Crema notte">
+            </label>
+
+            <label class="field">Marca (facoltativa)
+                <input class="field__input" type="text" id="new-brand" maxlength="25" placeholder="Es. CeraVe">
+            </label>
+
+            <label class="field">Categoria
+                <select class="field__input" id="new-category"></select>
+            </label>
+
+            <label class="field">Orario
+                <input class="field__input" type="time" id="new-time" value="08:00" required>
+            </label>
+
+            <div class="dialog__buttons">
+                <button type="button" class="dialog__button" id="cancel-button">Annulla</button>
+                <button type="submit" class="dialog__button dialog__button--primary">Aggiungi</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+        /* === DATI E STATO DELL'APPLICAZIONE === */
+        let products = JSON.parse(localStorage.getItem('bambocchan_products')) || [
+            { id: '1', name: 'Crema idratante viso', checked: true, photo: null },
+            { id: '2', name: 'Siero antirughe', checked: false, photo: null },
+            { id: '3', name: 'Crema solare protettiva', checked: true, photo: null },
+            { id: '4', name: 'Tonico delicato', checked: false, photo: null }
+        ];
+
+        /* === DATABASE LOCALE DI COMPATIBILITÀ === */
+        const productDatabase = {
+            "retinolo": {
+                incompatibleWith: ["acidi esfolianti", "vitamina c pura"],
+                warning: "Attenzione: il Retinolo non dovrebbe essere usato insieme ad Acidi Esfolianti o Vitamina C!"
+            },
+            "acidi esfolianti": {
+                incompatibleWith: ["retinolo"],
+                warning: "Attenzione: gli Acidi Esfolianti in contrasto con il Retinolo possono irritare la pelle."
+            },
+            "vitamina c pura": {
+                incompatibleWith: ["retinolo"],
+                warning: "Attenzione: la Vitamina C pura mal si concilia con il Retinolo."
+            }
+        };
+
+        /* === SELETTORI DOM === */
+        const productList = document.getElementById('product-list');
+        const counterText = document.getElementById('counter-text');
+        const percentageText = document.getElementById('percentage-text');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const addProductBtn = document.getElementById('add-product-btn');
+        const warningBox = document.getElementById('warning-box');
+        const warningText = document.getElementById('warning-text');
+
+        /* === SALVATAGGIO E UTILITÀ === */
+        function saveProducts() {
+            localStorage.setItem('bambocchan_products', JSON.stringify(products));
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+        }
+
+        function getProductById(id) {
+            return products.find(function (item) { return item.id === id; });
+        }
+
+        /* === RENDERIZZAZIONE DELLA LISTA === */
+        function renderProducts() {
+            productList.innerHTML = '';
+
+            if (products.length === 0) {
+                const emptyMessage = document.createElement('li');
+                emptyMessage.className = 'empty-message';
+                emptyMessage.textContent = 'Nessun prodotto. Premi "+ Aggiungi" per crearne uno!';
+                productList.appendChild(emptyMessage);
+                return;
+            }
+
+            products.forEach(function (product) {
+                const item = document.createElement('li');
+                item.className = 'product ' + (product.checked ? 'product--checked' : '');
+                item.dataset.id = product.id;
+
+                item.innerHTML = `
+          <button class="product__photo-btn" aria-label="Aggiungi foto prodotto" title="Aggiungi foto">
+            ${product.photo ? `<img src="${product.photo}" class="product__thumb" alt="Foto">` : `<span class="material-symbols-rounded">photo_camera</span>`}
+          </button>
+          <input type="file" class="product__file-input" accept="image/*" style="display: none;">
+
+          <label class="product__checkbox">
+            <input type="checkbox" ${product.checked ? 'checked' : ''}>
+            <span class="product__custom-checkbox">
+              <span class="material-symbols-rounded">check</span>
+            </span>
+          </label>
+          <div class="product__info">
+            <input type="text" class="product__name" value="${escapeHtml(product.name)}" placeholder="Nome prodotto...">
+          </div>
+          <button class="product__menu" aria-label="Elimina prodotto">
+            <span class="material-symbols-rounded">more_vert</span>
+          </button>
+        `;
+
+                productList.appendChild(item);
+            });
+        }
+
+        /* === AGGIORNAMENTO CONTATORE E BARRA === */
+        function updateCounter() {
+            const total = products.length;
+            const checkedCount = products.filter(function (item) { return item.checked; }).length;
+
+            counterText.textContent = checkedCount + ' / ' + total + ' prodotti usati';
+            const percentage = total > 0 ? Math.round((checkedCount / total) * 100) : 0;
+            percentageText.textContent = percentage + '%';
+            progressBarFill.style.width = percentage + '%';
+        }
+
+        /* === CONTROLLO CONFLITTI INTELLIGENTE === */
+        function checkSmartConflicts() {
+            const activeProducts = products.filter(function (item) { return item.checked; });
+            let detectedWarning = null;
+
+            for (let i = 0; i < activeProducts.length; i++) {
+                const nameA = activeProducts[i].name.toLowerCase();
+                let activeKeyA = null;
+
+                for (let key in productDatabase) {
+                    if (nameA.includes(key)) { activeKeyA = key; break; }
+                }
+                if (!activeKeyA) continue;
+                const infoA = productDatabase[activeKeyA];
+
+                for (let j = 0; j < activeProducts.length; j++) {
+                    if (i === j) continue;
+                    const nameB = activeProducts[j].name.toLowerCase();
+
+                    for (let k = 0; k < infoA.incompatibleWith.length; k++) {
+                        if (nameB.includes(infoA.incompatibleWith[k])) {
+                            detectedWarning = infoA.warning;
+                            break;
+                        }
+                    }
+                    if (detectedWarning) break;
+                }
+                if (detectedWarning) break;
+            }
+
+            if (detectedWarning) {
+                warningText.textContent = detectedWarning;
+                warningBox.style.display = 'flex';
+            } else {
+                warningBox.style.display = 'none';
+            }
+        }
+
+        /* === AGGIORNA INTERfACCIA COMPLETA === */
+        function refreshList() {
+            renderProducts();
+            updateCounter();
+            checkSmartConflicts();
+        }
+
+        /* === GESTIONE EVENTI SULLA LISTA (UNIFICATA) === */
+
+        // Gestione dei click (Fotocamera, Eliminazione tre puntini)
+        productList.addEventListener('click', function (event) {
+            // 1. Clic sul pulsante foto
+            const photoBtn = event.target.closest('.product__photo-btn');
+            if (photoBtn) {
+                const card = photoBtn.closest('.product');
+                const fileInput = card.querySelector('.product__file-input');
+                fileInput.click();
+                return;
+            }
+
+            // 2. Clic sul menu di eliminazione (tre puntini)
+            const menuButton = event.target.closest('.product__menu');
+            if (menuButton) {
+                const card = menuButton.closest('.product');
+                const product = getProductById(card.dataset.id);
+                let name = product.name.trim() || 'questo prodotto';
+
+                if (confirm('Vuoi eliminare "' + name + '"?')) {
+                    products = products.filter(function (item) { return item.id !== product.id; });
+                    saveProducts();
+                    refreshList();
+                }
+            }
+        });
+
+        // Gestione dei cambiamenti (Checkbox, Nome testo, Caricamento file immagine)
+        productList.addEventListener('change', function (event) {
+            // 1. Cambio spunta checkbox
+            const checkboxInput = event.target.closest('input[type="checkbox"]');
+            if (checkboxInput) {
+                const card = checkboxInput.closest('.product');
+                const product = getProductById(card.dataset.id);
+                product.checked = checkboxInput.checked;
+                saveProducts();
+                refreshList();
+                return;
+            }
+
+            // 2. Modifica nome prodotto
+            const nameInput = event.target.closest('.product__name');
+            if (nameInput) {
+                const card = nameInput.closest('.product');
+                const product = getProductById(card.dataset.id);
+                product.name = nameInput.value;
+                saveProducts();
+                refreshList();
+                return;
+            }
+
+            // 3. Selezione file immagine dalla galleria/fotocamera
+            const fileInput = event.target.closest('.product__file-input');
+            if (fileInput) {
+                const file = fileInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const card = fileInput.closest('.product');
+                        const product = getProductById(card.dataset.id);
+                        product.photo = e.target.result;
+                        saveProducts();
+                        refreshList();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        /* === AGGIUNGI NUOVO PRODOTTO === */
+        addProductBtn.addEventListener('click', function () {
+            const newProduct = {
+                id: Date.now().toString(),
+                name: 'Nuovo prodotto',
+                checked: false,
+                photo: null
+            };
+            products.push(newProduct);
+            saveProducts();
+            refreshList();
+        });
+
+        /* === AVVIO INIZIALE === */
+        refreshList();
+    </script>
+</body>
+
+</html>
