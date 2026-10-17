@@ -1,0 +1,2509 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FF8DA1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bambocchan Care</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+    <style>
+        :root {
+            --color-page: #ffeab7;
+            --color-bg: #fff6e8;
+            --color-card: #ffffff;
+            --color-text: #3d2c29;
+            --color-text-soft: #8a6f65;
+            --color-rose: #ff7b90;
+            --color-rose-soft: #ffe2e7;
+            --color-gold: #f4a261;
+            --color-gold-soft: #fef0db;
+            --color-track: #f3e4d4;
+            --color-border: #f7e6d5;
+            --font-main: "Nunito", system-ui, sans-serif;
+            --radius-card: 22px;
+            --radius-box: 16px;
+            --radius-pill: 999px;
+            --shadow-card: 0 6px 18px rgba(244, 162, 97, 0.12);
+            --shadow-hover: 0 10px 25px rgba(244, 162, 97, 0.22);
+            --shadow-button: 0 6px 16px rgba(255, 123, 144, 0.35);
+        }
+
+        body.theme-strawberry {
+            --color-page: #ffccd5;
+            --color-bg: #fff0f3;
+            --color-gold: #ff4d6d;
+            --color-gold-soft: #ffe3e7;
+            --color-rose: #ff758f;
+            --color-track: #ffd1d8;
+            --color-border: #ffb3bf;
+        }
+
+        body.theme-gothic {
+            --color-page: #120f18;
+            --color-bg: #1a1622;
+            --color-card: #241f2e;
+            --color-text: #f0e6ef;
+            --color-text-soft: #b8a9c9;
+            --color-rose: #e56b6f;
+            --color-rose-soft: #3b283d;
+            --color-gold: #9d4edd;
+            --color-gold-soft: #2c1a3d;
+            --color-track: #352b47;
+            --color-border: #443557;
+            --shadow-card: 0 6px 18px rgba(0, 0, 0, 0.4);
+            --shadow-hover: 0 10px 25px rgba(157, 78, 221, 0.25);
+            --shadow-button: 0 6px 16px rgba(157, 78, 221, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--color-text);
+            background: var(--color-page);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(254, 202, 87, 0.35) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 123, 144, 0.25) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(255, 246, 232, 0.8) 0%, rgba(255, 234, 183, 0.9) 100%);
+            background-attachment: fixed;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.theme-gothic {
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(157, 78, 221, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(229, 107, 111, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(26, 22, 34, 0.9) 0%, rgba(18, 15, 24, 0.95) 100%);
+        }
+
+        button {
+            font-family: inherit;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .material-symbols-rounded {
+            font-family: "Material Symbols Rounded";
+            font-weight: normal;
+            font-style: normal;
+            line-height: 1;
+            display: inline-block;
+            user-select: none;
+        }
+
+        .app {
+            max-width: 420px;
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 20px 18px 80px;
+            background: var(--color-bg);
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 22px;
+        }
+
+        .header__title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--color-rose);
+        }
+
+        .header__subtitle {
+            margin-top: 4px;
+            font-size: 15px;
+            color: var(--color-text-soft);
+        }
+
+        .header__profile {
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--color-card);
+            color: var(--color-rose);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            border: 2px solid var(--color-gold);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+
+        .header__profile:hover {
+            transform: scale(1.08);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .header__profile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            background: #e74c3c;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            display: none;
+            animation: pulseDot 1.5s infinite;
+        }
+
+        @keyframes pulseDot {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+            }
+
+            70% {
+                transform: scale(1.1);
+                box-shadow: 0 0 0 6px rgba(231, 76, 60, 0);
+            }
+
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+            }
+        }
+
+        .days {
+            display: flex;
+            gap: 5px;
+            margin-top: 22px;
+            align-items: stretch;
+        }
+
+        .day {
+            flex: 1;
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            border-radius: var(--radius-box);
+            background: var(--color-card);
+            border: 1.5px solid var(--color-border);
+            box-shadow: var(--shadow-card);
+            font-size: 12px;
+            color: var(--color-text-soft);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .day:hover {
+            transform: translateY(-2px);
+            border-color: var(--color-gold);
+            background: var(--color-gold-soft);
+            color: var(--color-text);
+        }
+
+        .day__number {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .day.is-active {
+            background: var(--color-gold);
+            border-color: var(--color-gold);
+            color: #ffffff;
+        }
+
+        .day.is-active .day__number {
+            color: #ffffff;
+        }
+
+        .day-add-btn {
+            width: 36px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-box);
+            background: var(--color-gold-soft);
+            border: 1.5px dashed var(--color-gold);
+            color: var(--color-gold);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-card);
+        }
+
+        .day-add-btn:hover {
+            background: var(--color-gold);
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .progress {
+            margin-top: 20px;
+            padding: 18px 18px 20px;
+            border-radius: var(--radius-card);
+            background: var(--color-card);
+            box-shadow: var(--shadow-card);
+            border: 2px dashed var(--color-border);
+        }
+
+        .progress__top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .label {
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-gold);
+        }
+
+        .progress__badge {
+            padding: 5px 12px;
+            border-radius: var(--radius-pill);
+            background: var(--color-gold-soft);
+            color: var(--color-gold);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .progress__middle {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-top: 14px;
+        }
+
+        .progress__counter {
+            font-size: 21px;
+            font-weight: 800;
+            color: var(--color-text);
+        }
+
+        .progress__bar-container {
+            width: 100%;
+            height: 9px;
+            background: var(--color-track);
+            border-radius: var(--radius-pill);
+            margin-top: 16px;
+            overflow: hidden;
+        }
+
+        .progress__bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--color-gold), var(--color-rose));
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .warning-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--color-gold-soft);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+            padding: 12px 16px;
+            border-radius: var(--radius-box);
+            margin-top: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: var(--shadow-card);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .warning-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-gold);
+            flex-shrink: 0;
+        }
+
+        .checklist {
+            margin-top: 24px;
+        }
+
+        .checklist__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .checklist__title {
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--color-text-soft);
+        }
+
+        .checklist__today {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--color-rose);
+        }
+
+        .checklist__list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .product {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            border-radius: var(--radius-card);
+            background: var(--color-card);
+            border: 1.5px solid var(--color-border);
+            box-shadow: var(--shadow-card);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .product:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--color-gold);
+        }
+
+        .product.status-green {
+            border-left: 6px solid #2ecc71;
+            background-color: rgba(46, 204, 113, 0.03);
+        }
+
+        .product.status-yellow {
+            border-left: 6px solid #f1c40f;
+            background-color: rgba(241, 196, 15, 0.04);
+        }
+
+        .product.status-red {
+            border-left: 6px solid #e74c3c;
+            background-color: rgba(231, 76, 60, 0.05);
+        }
+
+        .product__info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .product__name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--color-text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product__menu,
+        .product__photo-btn {
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .product__menu:hover {
+            transform: scale(1.15);
+            color: var(--color-rose);
+        }
+
+        .product__photo-btn:hover {
+            transform: scale(1.08);
+            border-color: var(--color-gold);
+            background: var(--color-gold-soft);
+        }
+
+        .product__checkbox {
+            cursor: pointer;
+            display: flex;
+        }
+
+        .product__checkbox input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .product__custom-checkbox {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 2px solid var(--color-gold);
+            color: transparent;
+            font-size: 16px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .product__checkbox:hover .product__custom-checkbox {
+            transform: scale(1.1);
+            border-color: var(--color-rose);
+        }
+
+        .product__checkbox input:checked+.product__custom-checkbox {
+            background: var(--color-gold);
+            border-color: var(--color-gold);
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+
+        .product__photo-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px dashed var(--color-border);
+            background: var(--color-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            overflow: hidden;
+            flex-shrink: 0;
+            color: var(--color-text-soft);
+        }
+
+        .product__thumb {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .add-button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: var(--radius-pill);
+            background: linear-gradient(135deg, var(--color-gold), var(--color-rose));
+            color: #ffffff;
+            font-size: 17px;
+            font-weight: 800;
+            box-shadow: var(--shadow-button);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .add-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(255, 123, 144, 0.45);
+        }
+
+        .add-button:active {
+            transform: scale(0.98);
+        }
+
+        .empty-message {
+            padding: 22px 14px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--color-text-soft);
+            background: var(--color-card);
+            border: 1.5px dashed var(--color-border);
+            border-radius: var(--radius-card);
+        }
+
+        .ai-floating-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-gold), var(--color-rose));
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-button);
+            cursor: pointer;
+            z-index: 900;
+            overflow: hidden;
+            border: 2px solid var(--color-card);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .ai-floating-btn:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .ai-floating-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 380px;
+            background: var(--color-card);
+            border-radius: var(--radius-card);
+            padding: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(20px) scale(0.96);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-overlay.is-open .modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal__title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .modal__title-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--color-gold);
+        }
+
+        .modal__field-group {
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .modal__label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--color-text-soft);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .modal__input,
+        .modal__textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: var(--radius-box);
+            border: 1.5px solid var(--color-border);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            background: var(--color-bg);
+            color: var(--color-text);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal__textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal__input:hover,
+        .modal__textarea:hover {
+            border-color: var(--color-gold);
+            background-color: var(--color-card);
+        }
+
+        .modal__input:focus,
+        .modal__textarea:focus {
+            border-color: var(--color-rose);
+            background-color: var(--color-card);
+            box-shadow: 0 0 0 4px var(--color-rose-soft);
+        }
+
+        /* CALENDARIO GRIGLIA STILE */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+
+        .cal-day-header {
+            font-size: 11px;
+            font-weight: 800;
+            text-align: center;
+            color: var(--color-rose);
+            padding: 4px 0;
+        }
+
+        .cal-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            background: var(--color-bg);
+            border: 1.5px solid var(--color-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .cal-cell:hover {
+            border-color: var(--color-gold);
+            background: var(--color-gold-soft);
+        }
+
+        .cal-cell.has-note::after {
+            content: '';
+            position: absolute;
+            bottom: 3px;
+            width: 5px;
+            height: 5px;
+            background: var(--color-rose);
+            border-radius: 50%;
+        }
+
+        .cal-cell.is-selected {
+            background: var(--color-gold);
+            border-color: var(--color-gold);
+            color: #ffffff;
+        }
+
+        .cal-cell.is-selected::after {
+            background: #ffffff;
+        }
+
+        /* CUSTOM DROPDOWN */
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .custom-dropdown__trigger {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: var(--radius-box);
+            border: 1.5px solid var(--color-border);
+            background: var(--color-bg);
+            color: var(--color-text);
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .custom-dropdown__trigger:hover {
+            border-color: var(--color-gold);
+            background: var(--color-card);
+        }
+
+        .custom-dropdown.is-open .custom-dropdown__trigger {
+            border-color: var(--color-rose);
+            background: var(--color-card);
+            box-shadow: 0 0 0 4px var(--color-rose-soft);
+        }
+
+        .custom-dropdown__trigger .material-symbols-rounded {
+            transition: transform 0.2s ease;
+            color: var(--color-text-soft);
+        }
+
+        .custom-dropdown.is-open .custom-dropdown__trigger .material-symbols-rounded {
+            transform: rotate(180deg);
+            color: var(--color-rose);
+        }
+
+        .custom-dropdown__menu {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: var(--color-card);
+            border: 1.5px solid var(--color-border);
+            border-radius: var(--radius-box);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            max-height: 220px;
+            overflow-y: auto;
+            z-index: 1050;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: all 0.2s ease;
+            padding: 6px;
+        }
+
+        .custom-dropdown.is-open .custom-dropdown__menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .custom-dropdown__group-title {
+            padding: 8px 10px 4px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-rose);
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: 4px;
+        }
+
+        .custom-dropdown__option {
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .custom-dropdown__option:hover {
+            background: var(--color-gold-soft);
+            color: var(--color-gold);
+            transform: translateX(3px);
+        }
+
+        .custom-dropdown__option.is-selected {
+            background: var(--color-rose-soft);
+            color: var(--color-rose);
+            font-weight: 800;
+        }
+
+        .modal__buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+            flex-shrink: 0;
+        }
+
+        .modal__btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: var(--radius-pill);
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal__btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.05);
+        }
+
+        .modal__btn:active {
+            transform: scale(0.98);
+        }
+
+        .modal__btn--cancel {
+            background: var(--color-track);
+            color: var(--color-text-soft);
+        }
+
+        .modal__btn--cancel:hover {
+            background: var(--color-border);
+            color: var(--color-text);
+        }
+
+        .modal__btn--save {
+            background: linear-gradient(135deg, var(--color-gold), var(--color-rose));
+            color: #ffffff;
+            box-shadow: var(--shadow-button);
+        }
+
+        .modal__btn--danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: #ffffff;
+            box-shadow: 0 6px 16px rgba(231, 76, 60, 0.35);
+        }
+
+        .setting-group {
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .setting-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--color-text-soft);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .theme-options {
+            display: flex;
+            gap: 6px;
+        }
+
+        .theme-btn {
+            flex: 1;
+            padding: 8px 4px;
+            border-radius: var(--radius-box);
+            border: 2px solid var(--color-border);
+            background: var(--color-bg);
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            color: var(--color-text);
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .theme-btn:hover {
+            border-color: var(--color-gold);
+            transform: translateY(-1px);
+        }
+
+        .theme-btn.active {
+            border-color: var(--color-gold);
+            background: var(--color-gold-soft);
+            color: var(--color-gold);
+            box-shadow: 0 2px 8px rgba(244, 162, 97, 0.25);
+        }
+
+        .chat-container {
+            height: 220px;
+            overflow-y: auto;
+            background: var(--color-bg);
+            border: 1.5px solid var(--color-border);
+            border-radius: var(--radius-box);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 10px;
+            scroll-behavior: smooth;
+        }
+
+        .chat-message {
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            line-height: 1.4;
+            max-width: 88%;
+            white-space: pre-wrap;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .chat-message.user {
+            background: var(--color-gold);
+            color: #ffffff;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+
+        .chat-message.ai {
+            background: var(--color-card);
+            color: var(--color-text);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+
+        .sweet-extra-btn {
+            width: 100%;
+            margin-bottom: 8px;
+            padding: 10px;
+            border-radius: var(--radius-box);
+            background: var(--color-gold-soft);
+            color: var(--color-gold);
+            font-size: 13px;
+            font-weight: 700;
+            border: 1px dashed var(--color-gold);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sweet-extra-btn:hover {
+            background: var(--color-gold);
+            color: #ffffff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(244, 162, 97, 0.3);
+        }
+
+        .reset-chat-btn {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: var(--radius-box);
+            background: var(--color-rose-soft);
+            color: var(--color-rose);
+            font-size: 12px;
+            font-weight: 800;
+            border: 1px dashed var(--color-rose);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reset-chat-btn:hover {
+            background: var(--color-rose);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .catalog-container,
+        .bugs-container,
+        .guide-container {
+            overflow-y: auto;
+            flex: 1;
+            max-height: 280px;
+            padding-right: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .catalog-item,
+        .bug-item,
+        .guide-item {
+            background: var(--color-bg);
+            border: 1.5px solid var(--color-border);
+            padding: 10px;
+            border-radius: var(--radius-box);
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .catalog-item:hover,
+        .bug-item:hover,
+        .guide-item:hover {
+            border-color: var(--color-gold);
+            background: var(--color-card);
+        }
+
+        .catalog-brand {
+            font-weight: 800;
+            color: var(--color-rose);
+            margin-bottom: 2px;
+        }
+
+        .catalog-status {
+            font-weight: 700;
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+            font-size: 11px;
+        }
+
+        .catalog-status.red {
+            background: #fadbd8;
+            color: #c0392b;
+        }
+
+        .catalog-status.yellow {
+            background: #fcf3cf;
+            color: #d4ac0d;
+        }
+
+        .catalog-status.green {
+            background: #d4efdf;
+            color: #27ae60;
+        }
+
+        .bug-thumb {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 6px;
+            border: 1px solid var(--color-border);
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <header class="header">
+            <div>
+                <h1 class="header__title">Bambocchan Care</h1>
+                <p class="header__subtitle">Pronta per la skincare, cucciola? 🖤</p>
+            </div>
+            <button class="header__profile" id="open-profile-btn" aria-label="Profilo e impostazioni">
+                <img id="header-avatar-img"
+                    src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=150&q=80"
+                    alt="Avatar Profilo">
+                <span class="notification-dot" id="header-notification-dot"></span>
+            </button>
+        </header>
+
+        <main>
+            <section class="days" id="main-days-container" aria-label="Giorni della settimana">
+                <div class="day" data-day-offset="0"><span>Lun</span><span class="day__number"></span></div>
+                <div class="day" data-day-offset="1"><span>Mar</span><span class="day__number"></span></div>
+                <div class="day" data-day-offset="2"><span>Mer</span><span class="day__number"></span></div>
+                <div class="day" data-day-offset="3"><span>Gio</span><span class="day__number"></span></div>
+                <div class="day" data-day-offset="4"><span>Ven</span><span class="day__number"></span></div>
+                <div class="day" data-day-offset="5"><span>Sab</span><span class="day__number"></span></div>
+                <div class="day" data-day-offset="6"><span>Dom</span><span class="day__number"></span></div>
+                <button class="day-add-btn" id="open-calendar-inline-btn" title="Apri Calendario Mensile">
+                    <span class="material-symbols-rounded" style="font-size: 20px;">calendar_month</span>
+                    <span style="font-size: 10px; font-weight: 800; margin-top: 2px;">+</span>
+                </button>
+            </section>
+
+            <section class="progress" aria-label="Progresso beauty routine">
+                <div class="progress__top">
+                    <h2 class="label" id="progress-label-title">Progresso routine</h2>
+                    <span class="progress__badge" id="percentage-text">0%</span>
+                </div>
+                <div class="progress__middle">
+                    <p class="progress__counter" id="counter-text">0 / 0 prodotti usati</p>
+                </div>
+                <div class="progress__bar-container">
+                    <div class="progress__bar-fill" id="progress-bar-fill"></div>
+                </div>
+            </section>
+
+            <div id="warning-box" class="warning-box" style="display: none;">
+                <img id="warning-avatar-img" class="warning-avatar" src="" alt="Warning Avatar">
+                <span id="warning-text">Amore, occhio a questa combinazione o scelta etica.</span>
+            </div>
+
+            <section class="checklist" aria-label="Checklist giornaliera">
+                <div class="checklist__header">
+                    <h2 class="checklist__title" id="checklist-header-title">Checklist di oggi</h2>
+                    <span class="checklist__today" id="checklist-date-label">Forza piccola!</span>
+                </div>
+                <ul class="checklist__list" id="product-list"></ul>
+            </section>
+
+            <button class="add-button" id="add-product-btn">+ Aggiungi prodotto</button>
+        </main>
+
+        <button class="ai-floating-btn" id="open-ai-chat-btn" aria-label="Chat con l'assistente">
+            <img id="chat-floating-avatar" src="" alt="Il tuo axton">
+        </button>
+    </div>
+
+    <!-- MODALE NOTIFICA PROMEMORIA GIORNO CORRENTE -->
+    <div class="modal-overlay" id="daily-reminder-modal">
+        <div class="modal" style="text-align: center;">
+            <div
+                style="width: 70px; height: 70px; margin: 0 auto 12px; border-radius: 50%; overflow: hidden; border: 3px solid var(--color-gold); box-shadow: var(--shadow-card);">
+                <img id="daily-reminder-avatar" src="" alt="Axton"
+                    style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <h3 class="modal__title" style="justify-content: center; color: var(--color-rose);">📅 Promemoria di oggi!
+            </h3>
+            <p style="font-size: 14px; font-weight: 700; color: var(--color-text); margin-bottom: 8px;">Ecco cosa hai
+                segnato per oggi:</p>
+            <div id="daily-reminder-text"
+                style="background: var(--color-bg); border: 1.5px solid var(--color-border); border-radius: var(--radius-box); padding: 12px; font-size: 14px; color: var(--color-text); margin-bottom: 20px; white-space: pre-wrap;">
+            </div>
+            <button class="modal__btn modal__btn--save" id="daily-reminder-ok-btn" style="width: 100%;">Ho letto tutto,
+                amore! ❤️</button>
+        </div>
+    </div>
+
+    <!-- MODALE CHAT -->
+    <div class="modal-overlay" id="ai-chat-modal">
+        <div class="modal">
+            <h3 class="modal__title">
+                <img id="chat-header-avatar" class="modal__title-avatar" src="" alt="Avatar">
+                <span>Il tuo axton</span>
+            </h3>
+            <button class="sweet-extra-btn" id="sweet-phrase-btn">✨ Chiedi un dolce pensiero d'amore</button>
+            <button class="reset-chat-btn" id="reset-chat-btn">🔄 Nuova domanda / Pulisci chat</button>
+
+            <div class="chat-container" id="chat-messages-container">
+                <div class="chat-message ai">Ehilà cucciola! Ci sono io qui a darti una mano. Chiedimi pure quello che
+                    vuoi o scatta una foto a un prodotto per aggiungerlo! 🖤</div>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <input type="text" class="modal__input" id="ai-chat-input" placeholder="Scrivi qui amore..."
+                    style="flex: 1; margin-bottom: 0;">
+                <button class="modal__btn modal__btn--save" id="ai-chat-send-btn" style="flex: 0 0 70px;">Invia</button>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+                <button class="modal__btn modal__btn--cancel" id="chat-camera-btn"
+                    style="background: var(--color-gold-soft); color: var(--color-gold); padding: 8px; font-size: 12px; flex: 1;">
+                    📷 Fotografa Prodotto
+                </button>
+                <input type="file" id="chat-file-input" accept="image/*" capture="environment" style="display: none;">
+                <button class="modal__btn modal__btn--cancel" id="ai-chat-close-btn"
+                    style="padding: 8px 16px; flex: initial;">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE AGGIUNTA PRODOTTO -->
+    <div class="modal-overlay" id="product-modal">
+        <div class="modal">
+            <h3 class="modal__title" id="modal-product-title">Gestisci Prodotto</h3>
+
+            <div class="modal__field-group">
+                <label class="modal__label">Filtra per Marca:</label>
+                <div class="custom-dropdown" id="dropdown-brand">
+                    <div class="custom-dropdown__trigger">
+                        <span class="trigger-label">-- Tutte le marche --</span>
+                        <span class="material-symbols-rounded">expand_more</span>
+                    </div>
+                    <div class="custom-dropdown__menu" id="dropdown-brand-menu"></div>
+                </div>
+            </div>
+
+            <div class="modal__field-group">
+                <label class="modal__label">Cerca o scrivi il nome del prodotto:</label>
+                <input type="text" class="modal__input" id="modal-product-input"
+                    placeholder="Es. MAC, Rare Beauty, Cosrx, Shein...">
+            </div>
+
+            <div class="modal__field-group">
+                <label class="modal__label">O seleziona direttamente dalla lista:</label>
+                <div class="custom-dropdown" id="dropdown-product">
+                    <div class="custom-dropdown__trigger">
+                        <span class="trigger-label">-- Seleziona dalla lista rapida --</span>
+                        <span class="material-symbols-rounded">expand_more</span>
+                    </div>
+                    <div class="custom-dropdown__menu" id="dropdown-product-menu"></div>
+                </div>
+            </div>
+
+            <div class="modal__buttons">
+                <button class="modal__btn modal__btn--cancel" id="modal-cancel-btn">Annulla</button>
+                <button class="modal__btn modal__btn--save" id="modal-save-btn">Salva</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE CANCELLAZIONE -->
+    <div class="modal-overlay" id="delete-confirm-modal">
+        <div class="modal" style="text-align: center;">
+            <h3 class="modal__title" style="justify-content: center;">🗑️ Elimina prodotto</h3>
+            <p id="delete-confirm-text" style="font-size: 14px; color: var(--color-text-soft); margin-bottom: 20px;">
+                Vuoi davvero eliminare questo prodotto?</p>
+            <div class="modal__buttons">
+                <button class="modal__btn modal__btn--cancel" id="delete-cancel-btn">Annulla</button>
+                <button class="modal__btn modal__btn--danger" id="delete-ok-btn">Elimina</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POP-UP RANDOM ACQUA -->
+    <div class="modal-overlay" id="water-reminder-modal">
+        <div class="modal" style="text-align: center;">
+            <div
+                style="width: 70px; height: 70px; margin: 0 auto 12px; border-radius: 50%; overflow: hidden; border: 3px solid var(--color-gold); box-shadow: var(--shadow-card);">
+                <img id="water-reminder-avatar" src="" alt="Axton"
+                    style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <h3 class="modal__title" style="justify-content: center; color: var(--color-rose);">💧 Il tuo axton ti
+                pensa!</h3>
+            <p style="font-size: 15px; font-weight: 700; color: var(--color-text); margin-bottom: 20px;">"Hai bevuto
+                amo?" 🚰<br><span style="font-size: 13px; font-weight: 400; color: var(--color-text-soft);">Ricordati di
+                    bere un bicchiere d'acqua per mantenere la pelle idratata!</span></p>
+            <div class="modal__buttons" style="flex-direction: column; gap: 8px;">
+                <button class="modal__btn modal__btn--save" id="water-ok-btn" style="width: 100%;">Fatto, ho bevuto!
+                    💧❤️</button>
+                <button class="modal__btn modal__btn--danger" id="water-no-btn"
+                    style="width: 100%; font-size: 12px; padding: 10px;">Non ho bevuto, sono una ciola</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE PROFILO -->
+    <div class="modal-overlay" id="profile-modal">
+        <div class="modal" style="text-align: center;">
+            <h3 class="modal__title" style="justify-content: center;">Profilo e impostazioni</h3>
+            <div class="setting-group">
+                <span class="setting-label">Tema di colori:</span>
+                <div class="theme-options">
+                    <button class="theme-btn active" data-theme="">Colada 🍍</button>
+                    <button class="theme-btn" data-theme="theme-strawberry">Fragola 🍓</button>
+                    <button class="theme-btn" data-theme="theme-gothic">Gotico 🦇</button>
+                </div>
+            </div>
+            <div class="setting-group">
+                <span class="setting-label">Avatar Profilo:</span>
+                <div
+                    style="width: 60px; height: 60px; margin: 0 auto 10px; border-radius: 50%; overflow: hidden; border: 3px solid var(--color-gold);">
+                    <img id="modal-profile-preview" src="" alt="Profilo"
+                        style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <button class="modal__btn modal__btn--cancel" id="upload-avatar-btn"
+                    style="width: 100%; background: var(--color-gold-soft); color: var(--color-gold); padding: 8px;">
+                    Carica foto dalla galleria
+                </button>
+                <input type="file" id="profile-file-input" accept="image/*" style="display: none;">
+            </div>
+            <div class="setting-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px;">
+                <button class="modal__btn modal__btn--cancel" id="open-catalog-btn"
+                    style="background: var(--color-rose-soft); color: var(--color-rose); padding: 8px; font-size: 11px; font-weight: 800;">
+                    📚 Catalogo Smart
+                </button>
+                <button class="modal__btn modal__btn--cancel" id="open-guide-btn"
+                    style="background: var(--color-gold-soft); color: var(--color-gold); padding: 8px; font-size: 11px; font-weight: 800;">
+                    🌿 Guida Principi
+                </button>
+                <button class="modal__btn modal__btn--cancel" id="open-calendar-btn"
+                    style="background: #e2f0d9; color: #385723; padding: 8px; font-size: 11px; font-weight: 800;">
+                    📅 Calendario
+                </button>
+                <button class="modal__btn modal__btn--cancel" id="open-bugs-btn"
+                    style="background: #ffe2e7; color: #e74c3c; padding: 8px; font-size: 11px; font-weight: 800; position: relative;">
+                    🐞 Bug <span id="bugs-badge-count"
+                        style="display:none; position:absolute; top:-4px; right:-4px; background:#e74c3c; color:#fff; font-size:9px; padding:2px 5px; border-radius:10px;">0</span>
+                </button>
+            </div>
+            <div class="modal__buttons" style="margin-top: 10px;">
+                <button class="modal__btn modal__btn--cancel" id="profile-close-btn">Chiudi</button>
+                <button class="modal__btn modal__btn--save" id="profile-save-btn">Salva</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE CATALOGO -->
+    <div class="modal-overlay" id="catalog-modal">
+        <div class="modal">
+            <h3 class="modal__title">📚 Catalogo Smart Marchi</h3>
+            <p style="font-size: 12px; color: var(--color-text-soft);">Ordinato per sicurezza e alfabetico. Filtra per
+                parola chiave:</p>
+            <div class="modal__field-group" style="margin-top: 8px; margin-bottom: 8px;">
+                <input type="text" class="modal__input" id="catalog-search-input"
+                    placeholder="Cerca marca o prodotto nel catalogo...">
+            </div>
+            <div class="catalog-container" id="catalog-list-container"></div>
+            <div class="modal__buttons" style="margin-top: 14px;">
+                <button class="modal__btn modal__btn--save" id="catalog-close-btn">Torna al Profilo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE GUIDA PRINCIPI ATTIVI -->
+    <div class="modal-overlay" id="guide-modal">
+        <div class="modal">
+            <h3 class="modal__title">🌿 Guida Principi Attivi & Rimedi</h3>
+            <p style="font-size: 12px; color: var(--color-text-soft); margin-bottom: 10px;">Elementi e principi attivi
+                consigliati per ogni problema:</p>
+            <div class="guide-container" id="guide-list-container"></div>
+            <div class="modal__buttons" style="margin-top: 14px;">
+                <button class="modal__btn modal__btn--save" id="guide-close-btn">Torna al Profilo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE CALENDARIO MENSILE NOTE -->
+    <div class="modal-overlay" id="calendar-modal">
+        <div class="modal">
+            <h3 class="modal__title" id="calendar-modal-title">📅 Calendario Mensile</h3>
+            <p style="font-size: 12px; color: var(--color-text-soft); margin-bottom: 8px;">Clicca su un giorno per
+                aggiungere note e programmi:</p>
+
+            <div class="calendar-grid" id="calendar-grid-container"></div>
+
+            <div class="modal__field-group" style="margin-top: 4px;">
+                <label class="modal__label" id="selected-day-label">Note per il giorno selezionato:</label>
+                <textarea class="modal__textarea" id="calendar-day-note-input"
+                    placeholder="Scrivi qui i prodotti o il programma per questo giorno..."></textarea>
+            </div>
+
+            <button class="modal__btn modal__btn--save" id="calendar-save-note-btn"
+                style="width: 100%; margin-bottom: 6px;">Salva Nota Giorno 💾</button>
+
+            <div class="modal__buttons" style="margin-top: 6px;">
+                <button class="modal__btn modal__btn--cancel" id="calendar-close-btn">Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE SEGNALAZIONI & BUG REPORT -->
+    <div class="modal-overlay" id="bugs-modal">
+        <div class="modal">
+            <h3 class="modal__title">🐞 Segnalazioni & Bug Report</h3>
+            <p style="font-size: 12px; color: var(--color-text-soft); margin-bottom: 10px;">Invia una segnalazione di
+                bug o richiesta con allegato screen:</p>
+
+            <div class="modal__field-group">
+                <input type="text" class="modal__input" id="bug-title-input"
+                    placeholder="Titolo o problema riscontrato...">
+            </div>
+            <div class="modal__field-group">
+                <textarea class="modal__textarea" id="bug-desc-input"
+                    placeholder="Descrivi cosa c'è da correggere o aggiungere..."></textarea>
+            </div>
+            <div class="modal__field-group" style="display: flex; align-items: center; gap: 10px;">
+                <button class="modal__btn modal__btn--cancel" id="bug-attach-btn"
+                    style="background: var(--color-gold-soft); color: var(--color-gold); padding: 8px; font-size: 12px;">
+                    📷 Allega Screenshot
+                </button>
+                <span id="bug-file-name" style="font-size: 11px; color: var(--color-text-soft);">Nessun file</span>
+                <input type="file" id="bug-file-input" accept="image/*" style="display: none;">
+            </div>
+            <button class="modal__btn modal__btn--save" id="bug-submit-btn"
+                style="width: 100%; margin-bottom: 10px;">Invia Segnalazione 🚀</button>
+
+            <div style="font-weight: 800; font-size: 12px; color: var(--color-rose); margin-top: 6px;">Cronologia
+                Segnalazioni:</div>
+            <div class="bugs-container" id="bugs-list-container"></div>
+
+            <div class="modal__buttons" style="margin-top: 10px;">
+                <button class="modal__btn modal__btn--save" id="bugs-close-btn">Torna al Profilo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODALE VISUALIZZAZIONE SCREENSHOT FULL -->
+    <div class="modal-overlay" id="image-preview-modal">
+        <div class="modal" style="align-items: center; text-align: center;">
+            <h3 class="modal__title">📷 Screenshot Allegato</h3>
+            <img id="preview-full-img" src="" alt="Zoom"
+                style="max-width: 100%; max-height: 60vh; border-radius: 12px; object-fit: contain; margin-bottom: 14px;">
+            <button class="modal__btn modal__btn--cancel" id="preview-close-btn" style="width: 100%;">Chiudi</button>
+        </div>
+    </div>
+
+    <script>
+        const catPhotos = {
+            crema: "https://images.unsplash.com/photo-1526947425960-945c6e72858f?auto=format&fit=crop&w=150&q=80",
+            siero: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=150&q=80",
+            detergente: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=150&q=80",
+            shampoo: "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=150&q=80",
+            balsamo: "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=150&q=80",
+            scrub: "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=150&q=80",
+            solare: "https://images.unsplash.com/photo-1526947425960-945c6e72858f?auto=format&fit=crop&w=150&q=80",
+            makeup: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=150&q=80"
+        };
+
+        const categorizedProducts = {
+            "Make-up Iconico & Virale 💄": [
+                "MAC Studio Fix Fluid Foundation SPF 15", "MAC Matte Lipstick (Velvet Teddy / Ruby Woo)", "MAC Prep + Prime Fix+ Spray",
+                "Huda Beauty Easy Bake Loose Setting Powder", "Huda Beauty Rose Quartz Eyeshadow Palette",
+                "Charlotte Tilbury Matte Revolution Pillow Talk", "Charlotte Tilbury Hollywood Flawless Filter",
+                "Rare Beauty Soft Pinch Liquid Blush", "Rare Beauty Positive Light Highlighter",
+                "Fenty Beauty Pro Filt'r Soft Matte Foundation", "Fenty Beauty Gloss Bomb Universal Lip Luminizer",
+                "e.l.f. Power Grip Primer", "e.l.f. 16HR Camo Concealer",
+                "Urban Decay Naked3 Palette", "Urban Decay All Nighter Setting Spray",
+                "Too Faced Better Than Sex Mascara", "Too Faced Hangover Primer",
+                "Benefit Benetint Lip & Cheek Stain", "Maybelline Lash Sensational Mascara", "Maybelline Eraser Eye Correttore",
+                "Sephora Cream Lip Stain Liquid Lipstick", "Laura Mercier Translucent Setting Powder"
+            ],
+            "Shein Beauty & Accessori Delicati (Nuovi) 🌸": [
+                "Shein Glamtopia Nourishing Lip Mask", "Shein Hydrating Rose Water Face Mist",
+                "Shein Gentle Daily Cleansing Foam", "Shein Hair Repair Argan Oil Serum",
+                "Shein Vitamin C Glow Sheet Mask", "Shein Botanical Soft Aloe Vera Gel"
+            ],
+            "Pantene & Cura Capelli 🧼": [
+                "Shampoo Pantene Pro-V Rigenera & Protegge", "Shampoo Pantene Ricci Perfetti", "Shampoo Pantene Lisci Effetto Seta",
+                "Shampoo Pantene Aqua Light", "Shampoo Pantene Miracles Ricostruzione", "Balsamo Pantene Ricci Perfetti",
+                "Maschera Capelli Pantene SOS Proteine", "Trattamento Olio Pantene Pro-V"
+            ],
+            "Head & Shoulders (Anti-Forfora) 🧼": [
+                "Shampoo Head & Shoulders Anti-Forfora Classic", "Shampoo Head & Shoulders Menthol Fresh", "Shampoo Head & Shoulders Mela Verde"
+            ],
+            "CeraVe (Dermatologici & Creme) 🧴": [
+                "Crema Idratante CeraVe Viso e Corpo", "Crema Viso Idratante SPF 25 CeraVe", "Lozione Idratante CeraVe",
+                "Detergente Idratante CeraVe", "Detergente Schiumoso CeraVe", "Crema Levigante Antirugosità CeraVe"
+            ],
+            "The Ordinary (Sieri & Trattamenti) 🧪": [
+                "Siero The Ordinary Niacinamide 10% + Zinc 1%", "Siero The Ordinary Acido Ialuronico 2% + B5",
+                "Siero The Ordinary Retinol 0.5% in Squalane", "Peeling Soluzione The Ordinary AHA 30% + BHA 2%",
+                "Tonico The Ordinary Glycolic Acid 7% Toning Solution"
+            ],
+            "Cosmetica Coreana (K-Beauty) 🌸": [
+                "Cosrx Advanced Snail 96 Mucin Power Essence", "Cosrx Low pH Good Morning Gel Cleanser",
+                "Beauty of Joseon Relief Sun Rice + Probiotics SPF50+", "Beauty of Joseon Glow Serum Propolis + Niacinamide",
+                "Laneige Water Sleeping Mask", "Laneige Lip Sleeping Mask Berry",
+                "Innisfree Green Tea Seed Hyaluronic Serum", "Innisfree Pore Clearing Volcanic Clay Mask"
+            ],
+            "Capelli Professionali (Olaplex & Kérastase) ✨": [
+                "Olaplex No. 3 Hair Perfector", "Olaplex No. 4 Bond Maintenance Shampoo", "Olaplex No. 5 Bond Maintenance Conditioner",
+                "Kérastase Elixir Ultime Huile Originale", "Kérastase Nutritive Masquintense Capelli Secchi"
+            ],
+            "Garnier (Skincare & Capelli) 🌸": [
+                "Shampoo Garnier Fructis Hair Food Banana", "Balsamo Garnier Fructis Hair Food Banana",
+                "Siero Garnier Vitamina C Anti-Macchie", "Acqua Micellare Garnier Tutto in 1"
+            ],
+            "L'Oréal Paris (Trattamenti & Antirughe) ✨": [
+                "Crema Viso L'Oréal Revitalift Filler Acido Ialuronico", "Siero L'Oréal Revitalift Acido Ialuronico",
+                "Shampoo L'Oréal Elvive Olio Straordinario"
+            ],
+            "La Roche-Posay (Farmacia Dermatologica) 🌿": [
+                "Crema Viso La Roche-Posay Effaclar Duo+", "Siero La Roche-Posay Hyalu B5",
+                "Crema Viso La Roche-Posay Cicaplast Baume B5+", "Solare La Roche-Posay Anthelios UVMune 400 SPF50+"
+            ],
+            "Marche Biologiche & Nicchia (Pulite/Verdi) 🌱": [
+                "La Saponaria Crema Viso Idratante Bio", "BioNike Defence Hydra Crema Ricca", "Avène Hydrance Aqua-Gel",
+                "Caudalie Vinoperfect Siero Radianza", "Paula's Choice 2% BHA Liquid Exfoliant",
+                "L'Erbolario Crema Viso all'Acido Ialuronico", "Clarins Hydra-Essentiel Crema Ricca"
+            ],
+            "Altre Marche & Prodotti Comuni 🌸": [
+                "Crema Corpo Nivea Nucrema", "Acqua Micellare Bioderma Sensibio H2O", "Crema Viso Cetaphil Idratante",
+                "Fanghi Ahava Mar Morto Purificanti", "Eucerin UltraSENSITIVE Crema Viso Lenitiva"
+            ]
+        };
+
+        const availableBrands = Object.keys(categorizedProducts);
+
+        const conditionGuide = [
+            { condition: "Brufoli & Acne 🔴", advice: "Principi attivi consigliati: **Acido Salicilico (BHA)**, **Acido Glicolico (AHA)**, **Niacinamide** e **Benzoyl Peroxide** in basse percentuali. Marchi utili: The Ordinary, La Roche-Posay Effaclar, Paula's Choice." },
+            { condition: "Caduta Capelli / Capelli Fragili 💆‍♀️", advice: "Principi attivi consigliati: **Biotina**, **Proteine della Seta**, **Olio di Argan** e complessi bond-building. Marchi utili: Olaplex, Pantene Rigenera, Shein Argan Care." },
+            { condition: "Labbra Secche & Herpes 💋", advice: "Principi attivi consigliati: **Burro di Karité**, **Vitamina E**, **Acido Ialuronico** e peptidi rimpolpanti. Marchi utili: Laneige Lip Sleeping Mask, Shein Lip Mask." },
+            { condition: "Pelle Secca o Disidratata 💧", advice: "Principi attivi consigliati: **Acido Ialuronico**, **Ceramidi**, **Glicerina** e **Bava di Lumaca**. Marchi utili: CeraVe, Cosrx Snail Mucin, La Saponaria." },
+            { condition: "Punti Neri & Pori Dilatati 🌿", advice: "Principi attivi consigliati: **Argilla Verde/Bianca**, **Carbone Attivo** e **Acido Salicilico**. Marchi utili: Innisfree Volcanic Clay, Paula's Choice BHA." }
+        ];
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(() => { });
+            });
+        }
+
+        const BOYFRIEND_IMAGE_SRC = "faccia.png";
+        document.getElementById('chat-floating-avatar').src = BOYFRIEND_IMAGE_SRC;
+        document.getElementById('chat-header-avatar').src = BOYFRIEND_IMAGE_SRC;
+        document.getElementById('warning-avatar-img').src = BOYFRIEND_IMAGE_SRC;
+        document.getElementById('water-reminder-avatar').src = BOYFRIEND_IMAGE_SRC;
+        document.getElementById('daily-reminder-avatar').src = BOYFRIEND_IMAGE_SRC;
+
+        const savedTheme = localStorage.getItem('bambocchan_theme') || '';
+        if (savedTheme) document.body.className = savedTheme;
+
+        const themeButtons = document.querySelectorAll('.theme-btn');
+        themeButtons.forEach(btn => {
+            if (btn.dataset.theme === savedTheme) {
+                themeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            btn.addEventListener('click', () => {
+                themeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.body.className = btn.dataset.theme;
+            });
+        });
+
+        function getProductStatus(name) {
+            const lower = name.toLowerCase();
+            if (lower.includes("ahava") || lower.includes("l'oreal") || lower.includes("loreal") || lower.includes("cerave") || lower.includes("garnier") || lower.includes("la roche") || lower.includes("vichy") || lower.includes("estée lauder") || lower.includes("estee lauder") || lower.includes("clinique") || lower.includes("mac") || lower.includes("too faced") || lower.includes("urban decay")) {
+                return { level: "red", label: "Rosso: Criticità etica/geopolitica grave", rank: 3 };
+            }
+            if (lower.includes("nivea") || lower.includes("cetaphil") || lower.includes("bioderma") || lower.includes("pantene") || lower.includes("head & shoulders") || lower.includes("dove") || lower.includes("eucerin") || lower.includes("laneige") || lower.includes("maybelline") || lower.includes("shein")) {
+                return { level: "yellow", label: "Giallo: Criticità parziali / commerciali", rank: 2 };
+            }
+            return { level: "green", label: "Verde: Ottimo / Pulito / Cruelty-free", rank: 1 };
+        }
+
+        function getSmartPhotoForProductName(name) {
+            const lower = name.toLowerCase();
+            if (lower.includes("cerave") || lower.includes("cetaphil")) return "";
+            if (lower.includes("siero") || lower.includes("essence") || lower.includes("filter") || lower.includes("mist")) return catPhotos.siero;
+            if (lower.includes("shampoo")) return catPhotos.shampoo;
+            if (lower.includes("balsamo") || lower.includes("maschera")) return catPhotos.balsamo;
+            if (lower.includes("detergente") || lower.includes("micellare") || lower.includes("tonico") || lower.includes("fix+")) return catPhotos.detergente;
+            if (lower.includes("scrub") || lower.includes("fanghi") || lower.includes("clay") || lower.includes("powder") || lower.includes("cipria")) return catPhotos.scrub;
+            if (lower.includes("solare") || lower.includes("sun")) return catPhotos.solare;
+            if (lower.includes("lipstick") || lower.includes("blush") || lower.includes("palette") || lower.includes("mascara") || lower.includes("correttore") || lower.includes("fondotinta") || lower.includes("gloss")) return catPhotos.makeup;
+            return catPhotos.crema;
+        }
+
+        function fuzzyMatch(str, query) {
+            let s = str.toLowerCase();
+            let q = query.toLowerCase();
+            if (q.length <= 3) {
+                return s.includes(q);
+            }
+            if (s.includes(q)) return true;
+            let matches = 0;
+            for (let char of q) {
+                if (s.includes(char)) matches++;
+            }
+            return matches >= Math.ceil(q.length * 0.6);
+        }
+
+        let products = JSON.parse(localStorage.getItem('bambocchan_products')) || [
+            { id: '1', name: 'Rare Beauty Soft Pinch Liquid Blush', checked: true, photo: catPhotos.makeup, ingredients: '' },
+            { id: '2', name: 'Cosrx Advanced Snail 96 Mucin Power Essence', checked: false, photo: catPhotos.siero, ingredients: '' }
+        ];
+
+        let bugReports = JSON.parse(localStorage.getItem('bambocchan_bugs')) || [
+            { id: '1', title: 'Benvenuto nel sistema segnalazioni', desc: 'Qui puoi annotare bug o richieste con screen allegati.', image: '', read: false, date: '17 Ott 2026' }
+        ];
+
+        let calendarNotesMap = JSON.parse(localStorage.getItem('bambocchan_calendar_notes_map')) || {};
+        let weeklyCheckedMap = JSON.parse(localStorage.getItem('bambocchan_weekly_checked')) || {};
+
+        const todayDateObj = new Date();
+        const todayDayNum = todayDateObj.getDate();
+
+        function getMondayOfCurrentWeek(d) {
+            let date = new Date(d);
+            let day = date.getDay();
+            let diff = date.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(date.setDate(diff));
+        }
+
+        const mondayOfWeek = getMondayOfCurrentWeek(todayDateObj);
+
+        let weekDaysData = [];
+        for (let i = 0; i < 7; i++) {
+            let tempDate = new Date(mondayOfWeek);
+            tempDate.setDate(mondayOfWeek.getDate() + i);
+            weekDaysData.push({
+                dateObj: tempDate,
+                dayNum: tempDate.getDate(),
+                dateString: tempDate.toISOString().split('T')[0],
+                isToday: tempDate.toDateString() === todayDateObj.toDateString()
+            });
+        }
+
+        let selectedViewDateStr = todayDateObj.toISOString().split('T')[0];
+        let selectedCalendarDay = todayDayNum;
+
+        let userAvatar = localStorage.getItem('bambocchan_avatar') || 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=150&q=80';
+        let editingProductId = null;
+        let pendingDeleteId = null;
+        let tempBugImage = "";
+        let waterReminderTimer = null;
+        let calendarOpenedFromAvatar = false;
+
+        const productList = document.getElementById('product-list');
+        const counterText = document.getElementById('counter-text');
+        const percentageText = document.getElementById('percentage-text');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const addProductBtn = document.getElementById('add-product-btn');
+        const warningBox = document.getElementById('warning-box');
+        const warningText = document.getElementById('warning-text');
+        const headerNotificationDot = document.getElementById('header-notification-dot');
+        const checklistHeaderTitle = document.getElementById('checklist-header-title');
+        const checklistDateLabel = document.getElementById('checklist-date-label');
+
+        const productModal = document.getElementById('product-modal');
+        const modalProductTitle = document.getElementById('modal-product-title');
+        const modalProductInput = document.getElementById('modal-product-input');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
+        const modalSaveBtn = document.getElementById('modal-save-btn');
+
+        const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+        const deleteConfirmText = document.getElementById('delete-confirm-text');
+        const deleteCancelBtn = document.getElementById('delete-cancel-btn');
+        const deleteOkBtn = document.getElementById('delete-ok-btn');
+
+        const waterReminderModal = document.getElementById('water-reminder-modal');
+        const waterOkBtn = document.getElementById('water-ok-btn');
+        const waterNoBtn = document.getElementById('water-no-btn');
+
+        const dailyReminderModal = document.getElementById('daily-reminder-modal');
+        const dailyReminderText = document.getElementById('daily-reminder-text');
+        const dailyReminderOkBtn = document.getElementById('daily-reminder-ok-btn');
+
+        let selectedBrandValue = "";
+        const dropdownBrand = document.getElementById('dropdown-brand');
+        const dropdownBrandMenu = document.getElementById('dropdown-brand-menu');
+        const dropdownBrandTriggerLabel = dropdownBrand.querySelector('.trigger-label');
+
+        const dropdownProduct = document.getElementById('dropdown-product');
+        const dropdownProductMenu = document.getElementById('dropdown-product-menu');
+        const dropdownProductTriggerLabel = dropdownProduct.querySelector('.trigger-label');
+
+        function setupCustomDropdowns() {
+            dropdownBrandMenu.innerHTML = `<div class="custom-dropdown__option" data-value="">-- Tutte le marche --</div>` +
+                availableBrands.map(b => `<div class="custom-dropdown__option" data-value="${b}">${b}</div>`).join('');
+
+            dropdownBrand.querySelector('.custom-dropdown__trigger').onclick = (e) => {
+                e.stopPropagation();
+                dropdownProduct.classList.remove('is-open');
+                dropdownBrand.classList.toggle('is-open');
+            };
+
+            dropdownProduct.querySelector('.custom-dropdown__trigger').onclick = (e) => {
+                e.stopPropagation();
+                dropdownBrand.classList.remove('is-open');
+                dropdownProduct.classList.toggle('is-open');
+            };
+
+            document.addEventListener('click', () => {
+                dropdownBrand.classList.remove('is-open');
+                dropdownProduct.classList.remove('is-open');
+            });
+        }
+
+        function populateCustomProductDropdown(brandFilter = "", textFilter = "") {
+            dropdownProductMenu.innerHTML = '';
+            const lowerFilter = textFilter.toLowerCase();
+            let count = 0;
+
+            for (let group in categorizedProducts) {
+                if (brandFilter && group !== brandFilter) continue;
+
+                const matchedItems = categorizedProducts[group].filter(item => fuzzyMatch(item, lowerFilter));
+                if (matchedItems.length > 0) {
+                    const groupTitle = document.createElement('div');
+                    groupTitle.className = 'custom-dropdown__group-title';
+                    groupTitle.textContent = group;
+                    dropdownProductMenu.appendChild(groupTitle);
+
+                    matchedItems.forEach(item => {
+                        count++;
+                        const opt = document.createElement('div');
+                        opt.className = 'custom-dropdown__option';
+                        opt.textContent = item;
+                        opt.onclick = (e) => {
+                            e.stopPropagation();
+                            modalProductInput.value = item;
+                            dropdownProductTriggerLabel.textContent = item;
+                            dropdownProduct.classList.remove('is-open');
+                        };
+                        dropdownProductMenu.appendChild(opt);
+                    });
+                }
+            }
+
+            if (count === 0) {
+                dropdownProductMenu.innerHTML = `<div class="custom-dropdown__option" style="color:var(--color-text-soft);">Nessun prodotto trovato (verrà salvato come nuovo)</div>`;
+            }
+        }
+
+        dropdownBrandMenu.addEventListener('click', (e) => {
+            const opt = e.target.closest('.custom-dropdown__option');
+            if (opt) {
+                selectedBrandValue = opt.dataset.value;
+                dropdownBrandTriggerLabel.textContent = opt.textContent;
+                dropdownBrand.classList.remove('is-open');
+                populateCustomProductDropdown(selectedBrandValue, modalProductInput.value);
+            }
+        });
+
+        modalProductInput.addEventListener('input', () => {
+            populateCustomProductDropdown(selectedBrandValue, modalProductInput.value);
+        });
+
+        setupCustomDropdowns();
+        populateCustomProductDropdown();
+
+        const profileModal = document.getElementById('profile-modal');
+        const openProfileBtn = document.getElementById('open-profile-btn');
+        const headerAvatarImg = document.getElementById('header-avatar-img');
+        const modalProfilePreview = document.getElementById('modal-profile-preview');
+        const profileCloseBtn = document.getElementById('profile-close-btn');
+        const profileSaveBtn = document.getElementById('profile-save-btn');
+        const uploadAvatarBtn = document.getElementById('upload-avatar-btn');
+        const profileFileInput = document.getElementById('profile-file-input');
+
+        const openCatalogBtn = document.getElementById('open-catalog-btn');
+        const catalogModal = document.getElementById('catalog-modal');
+        const catalogCloseBtn = document.getElementById('catalog-close-btn');
+        const catalogListContainer = document.getElementById('catalog-list-container');
+        const catalogSearchInput = document.getElementById('catalog-search-input');
+
+        const openGuideBtn = document.getElementById('open-guide-btn');
+        const guideModal = document.getElementById('guide-modal');
+        const guideCloseBtn = document.getElementById('guide-close-btn');
+        const guideListContainer = document.getElementById('guide-list-container');
+
+        const openCalendarBtn = document.getElementById('open-calendar-btn');
+        const openCalendarInlineBtn = document.getElementById('open-calendar-inline-btn');
+        const calendarModal = document.getElementById('calendar-modal');
+        const calendarCloseBtn = document.getElementById('calendar-close-btn');
+        const calendarGridContainer = document.getElementById('calendar-grid-container');
+        const selectedDayLabel = document.getElementById('selected-day-label');
+        const calendarDayNoteInput = document.getElementById('calendar-day-note-input');
+        const calendarSaveNoteBtn = document.getElementById('calendar-save-note-btn');
+
+        const openBugsBtn = document.getElementById('open-bugs-btn');
+        const bugsModal = document.getElementById('bugs-modal');
+        const bugsCloseBtn = document.getElementById('bugs-close-btn');
+        const bugsListContainer = document.getElementById('bugs-list-container');
+        const bugTitleInput = document.getElementById('bug-title-input');
+        const bugDescInput = document.getElementById('bug-desc-input');
+        const bugAttachBtn = document.getElementById('bug-attach-btn');
+        const bugFileInput = document.getElementById('bug-file-input');
+        const bugFileName = document.getElementById('bug-file-name');
+        const bugSubmitBtn = document.getElementById('bug-submit-btn');
+        const bugsBadgeCount = document.getElementById('bugs-badge-count');
+
+        const imagePreviewModal = document.getElementById('image-preview-modal');
+        const previewFullImg = document.getElementById('preview-full-img');
+        const previewCloseBtn = document.getElementById('preview-close-btn');
+
+        const aiChatModal = document.getElementById('ai-chat-modal');
+        const openAiChatBtn = document.getElementById('open-ai-chat-btn');
+        const aiChatCloseBtn = document.getElementById('ai-chat-close-btn');
+        const aiChatSendBtn = document.getElementById('ai-chat-send-btn');
+        const aiChatInput = document.getElementById('ai-chat-input');
+        const chatMessagesContainer = document.getElementById('chat-messages-container');
+        const sweetPhraseBtn = document.getElementById('sweet-phrase-btn');
+        const resetChatBtn = document.getElementById('reset-chat-btn');
+        const chatCameraBtn = document.getElementById('chat-camera-btn');
+        const chatFileInput = document.getElementById('chat-file-input');
+
+        function updateAvatarUI() {
+            headerAvatarImg.src = userAvatar;
+            modalProfilePreview.src = userAvatar;
+        }
+        updateAvatarUI();
+
+        function updateNotificationsUI() {
+            const unreadCount = bugReports.filter(b => !b.read).length;
+            if (unreadCount > 0) {
+                headerNotificationDot.style.display = 'block';
+                bugsBadgeCount.style.display = 'inline-block';
+                bugsBadgeCount.textContent = unreadCount;
+            } else {
+                headerNotificationDot.style.display = 'none';
+                bugsBadgeCount.style.display = 'none';
+            }
+        }
+        updateNotificationsUI();
+
+        function saveProducts() { localStorage.setItem('bambocchan_products', JSON.stringify(products)); }
+        function saveWeeklyChecked() { localStorage.setItem('bambocchan_weekly_checked', JSON.stringify(weeklyCheckedMap)); }
+        function saveBugs() { localStorage.setItem('bambocchan_bugs', JSON.stringify(bugReports)); updateNotificationsUI(); }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+        }
+        function getProductById(id) { return products.find(item => item.id === id); }
+
+        function getCheckedIdsForDate(dateStr) {
+            return weeklyCheckedMap[dateStr] || [];
+        }
+
+        function renderProducts() {
+            productList.innerHTML = '';
+            const checkedIdsToday = getCheckedIdsForDate(selectedViewDateStr);
+
+            if (products.length === 0) {
+                const emptyMessage = document.createElement('li');
+                emptyMessage.className = 'empty-message';
+                emptyMessage.textContent = 'Nessun prodotto in lista. Clicca su "+ Aggiungi prodotto".';
+                productList.appendChild(emptyMessage);
+                return;
+            }
+
+            products.forEach(product => {
+                const status = getProductStatus(product.name);
+                const isChecked = checkedIdsToday.includes(product.id);
+                const item = document.createElement('li');
+                item.className = 'product status-' + status.level + (isChecked ? ' product--checked' : '');
+                item.dataset.id = product.id;
+                item.innerHTML = `
+                    <button class="product__photo-btn" aria-label="Fotografa etichetta" title="Fotografa ingredienti">
+                        ${product.photo ? `<img src="${product.photo}" class="product__thumb" alt="Foto">` : `<span class="material-symbols-rounded">photo_camera</span>`}
+                    </button>
+                    <input type="file" class="product__file-input" accept="image/*" capture="environment" style="display: none;">
+                    <label class="product__checkbox" onclick="event.stopPropagation();">
+                        <input type="checkbox" ${isChecked ? 'checked' : ''}>
+                        <span class="product__custom-checkbox"><span class="material-symbols-rounded">check</span></span>
+                    </label>
+                    <div class="product__info" onclick="openEditProductModal('${product.id}')">
+                        <div class="product__name">${escapeHtml(product.name)}</div>
+                    </div>
+                    <button class="product__menu" aria-label="Elimina prodotto" title="Elimina"><span class="material-symbols-rounded">more_vert</span></button>
+                `;
+                productList.appendChild(item);
+            });
+        }
+
+        function updateCounter() {
+            const total = products.length;
+            const checkedIdsToday = getCheckedIdsForDate(selectedViewDateStr);
+            const checkedCount = checkedIdsToday.length;
+            counterText.textContent = checkedCount + ' / ' + total + ' prodotti usati';
+            const percentage = total > 0 ? Math.round((checkedCount / total) * 100) : 0;
+            percentageText.textContent = percentage + '%';
+            progressBarFill.style.width = percentage + '%';
+        }
+
+        function checkConflictsHybrid(toggledProdId = null) {
+            const checkedIdsToday = getCheckedIdsForDate(selectedViewDateStr);
+            const activeProducts = products.filter(item => checkedIdsToday.includes(item.id));
+
+            if (activeProducts.length === 0) { warningBox.style.display = 'none'; return; }
+
+            let alertMessage = null;
+
+            if (toggledProdId && checkedIdsToday.includes(toggledProdId)) {
+                const prodObj = getProductById(toggledProdId);
+                if (prodObj) {
+                    for (let dInfo of weekDaysData) {
+                        if (dInfo.dateString < selectedViewDateStr) {
+                            const prevChecked = getCheckedIdsForDate(dInfo.dateString);
+                            if (prevChecked.includes(toggledProdId)) {
+                                alertMessage = `Attenzione amore! "${prodObj.name}" l'hai già usato il ${dInfo.dayNum} di questa settimana. Se lo usi troppo spesso potrebbe dare problemi alla pelle!`;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (!alertMessage) {
+                for (let i = 0; i < activeProducts.length; i++) {
+                    const prodA = activeProducts[i];
+                    const textA = (prodA.name + ' ' + (prodA.ingredients || '')).toLowerCase();
+
+                    if (textA.includes("ahava")) {
+                        alertMessage = `Amore, occhio: "${prodA.name}" estrae minerali nei territori occupati ed è al centro del boicottaggio Stolen Beauty.`;
+                        break;
+                    }
+                    if (textA.includes("l'oreal") || textA.includes("loreal") || textA.includes("cerave") || textA.includes("garnier") || textA.includes("la roche") || textA.includes("vichy") || textA.includes("maybelline")) {
+                        alertMessage = `Amore, "${prodA.name}" fa parte del gruppo L'Oréal, monitorato dal movimento BDS per investimenti e legami industriali in Israele.`;
+                        break;
+                    }
+                    if (textA.includes("estée lauder") || textA.includes("estee lauder") || textA.includes("clinique") || textA.includes("mac") || textA.includes("too faced") || textA.includes("urban decay")) {
+                        alertMessage = `Amore, "${prodA.name}" appartiene a Estée Lauder, legata a supporto finanziario a Israele.`;
+                        break;
+                    }
+                    if (textA.includes("cetaphil")) {
+                        alertMessage = `Amore, "${prodA.name}" appartiene a Galderma/Nestlé, monitorata nei circuiti di consumo critico internazionale.`;
+                        break;
+                    }
+
+                    for (let j = i + 1; j < activeProducts.length; j++) {
+                        const prodB = activeProducts[j];
+                        const textB = (prodB.name + ' ' + (prodB.ingredients || '')).toLowerCase();
+
+                        if ((textA.includes("retinolo") || textA.includes("revitalift") || textA.includes("glicolico") || textA.includes("scrub") || textA.includes("peeling") || textA.includes("bha")) &&
+                            (textB.includes("salicilico") || textB.includes("effaclar") || textB.includes("acne") || textB.includes("esfoliante"))) {
+                            alertMessage = `Amore, "${prodA.name}" e "${prodB.name}" usati insieme contengono elementi contrastanti e possono irritare gravemente la pelle!`;
+                            break;
+                        }
+                    }
+                    if (alertMessage) break;
+                }
+            }
+
+            if (alertMessage) {
+                warningText.textContent = alertMessage;
+                warningBox.style.display = 'flex';
+            } else {
+                warningBox.style.display = 'none';
+            }
+        }
+
+        function refreshList(toggledProdId = null) { renderProducts(); updateCounter(); checkConflictsHybrid(toggledProdId); }
+
+        openAiChatBtn.addEventListener('click', () => { aiChatModal.classList.add("is-open"); aiChatInput.focus(); });
+        aiChatCloseBtn.addEventListener('click', () => { aiChatModal.classList.remove("is-open"); });
+
+        openCatalogBtn.addEventListener('click', () => {
+            profileModal.classList.remove('is-open');
+            populateCatalogModal();
+            catalogModal.classList.add('is-open');
+        });
+        catalogCloseBtn.addEventListener('click', () => {
+            catalogModal.classList.remove('is-open');
+            profileModal.classList.add('is-open');
+        });
+
+        catalogSearchInput.addEventListener('input', () => {
+            populateCatalogModal(catalogSearchInput.value);
+        });
+
+        openGuideBtn.addEventListener('click', () => {
+            profileModal.classList.remove('is-open');
+            populateGuideModal();
+            guideModal.classList.add('is-open');
+        });
+        guideCloseBtn.addEventListener('click', () => {
+            guideModal.classList.remove('is-open');
+            profileModal.classList.add('is-open');
+        });
+
+        openCalendarInlineBtn.addEventListener('click', () => {
+            calendarOpenedFromAvatar = false;
+            renderCalendarGrid();
+            calendarModal.classList.add('is-open');
+        });
+
+        openCalendarBtn.addEventListener('click', () => {
+            calendarOpenedFromAvatar = true;
+            profileModal.classList.remove('is-open');
+            renderCalendarGrid();
+            calendarModal.classList.add('is-open');
+        });
+
+        calendarCloseBtn.addEventListener('click', () => {
+            calendarModal.classList.remove('is-open');
+            if (calendarOpenedFromAvatar) {
+                profileModal.classList.add('is-open');
+            }
+        });
+
+        function renderCalendarGrid() {
+            calendarGridContainer.innerHTML = '';
+            const daysOfWeekHeader = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
+            daysOfWeekHeader.forEach(d => {
+                const header = document.createElement('div');
+                header.className = 'cal-day-header';
+                header.textContent = d;
+                calendarGridContainer.appendChild(header);
+            });
+
+            for (let day = 1; day <= 31; day++) {
+                const cell = document.createElement('div');
+                cell.className = 'cal-cell';
+                cell.textContent = day;
+                if (calendarNotesMap[day] && calendarNotesMap[day].trim() !== '') {
+                    cell.classList.add('has-note');
+                }
+                if (day === selectedCalendarDay) {
+                    cell.classList.add('is-selected');
+                }
+                cell.onclick = () => {
+                    selectedCalendarDay = day;
+                    renderCalendarGrid();
+                    selectedDayLabel.textContent = `Note per il giorno ${selectedCalendarDay}:`;
+                    calendarDayNoteInput.value = calendarNotesMap[selectedCalendarDay] || '';
+                };
+                calendarGridContainer.appendChild(cell);
+            }
+
+            selectedDayLabel.textContent = `Note per il giorno ${selectedCalendarDay}:`;
+            calendarDayNoteInput.value = calendarNotesMap[selectedCalendarDay] || '';
+        }
+
+        calendarSaveNoteBtn.addEventListener('click', () => {
+            const noteText = calendarDayNoteInput.value.trim();
+            if (noteText) {
+                calendarNotesMap[selectedCalendarDay] = noteText;
+            } else {
+                delete calendarNotesMap[selectedCalendarDay];
+            }
+            localStorage.setItem('bambocchan_calendar_notes_map', JSON.stringify(calendarNotesMap));
+            renderCalendarGrid();
+            alert(`Nota salvata con successo per il giorno ${selectedCalendarDay}! 📅✨`);
+        });
+
+        openBugsBtn.addEventListener('click', () => {
+            profileModal.classList.remove('is-open');
+            bugReports.forEach(b => b.read = true);
+            saveBugs();
+            populateBugsModal();
+            bugsModal.classList.add('is-open');
+        });
+        bugsCloseBtn.addEventListener('click', () => {
+            bugsModal.classList.remove('is-open');
+            profileModal.classList.add('is-open');
+        });
+
+        bugAttachBtn.addEventListener('click', () => { bugFileInput.click(); });
+        bugFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                bugFileName.textContent = file.name;
+                const reader = new FileReader();
+                reader.onload = (evt) => { tempBugImage = evt.target.result; };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        bugSubmitBtn.addEventListener('click', () => {
+            const title = bugTitleInput.value.trim();
+            const desc = bugDescInput.value.trim();
+            if (!title && !desc) return;
+
+            const newBug = {
+                id: Date.now().toString(),
+                title: title || 'Segnalazione senza titolo',
+                desc: desc || 'Nessuna descrizione.',
+                image: tempBugImage,
+                read: true,
+                date: new Date().toLocaleDateString('it-IT', { day: '2-digit', month: 'short', year: 'numeric' })
+            };
+
+            bugReports.unshift(newBug);
+            saveBugs();
+            bugTitleInput.value = '';
+            bugDescInput.value = '';
+            tempBugImage = '';
+            bugFileName.textContent = 'Nessun file';
+            populateBugsModal();
+            alert('Segnalazione inviata con successo! 🚀');
+        });
+
+        function populateBugsModal() {
+            bugsListContainer.innerHTML = '';
+            if (bugReports.length === 0) {
+                bugsListContainer.innerHTML = `<div style="text-align:center; color:var(--color-text-soft); font-size:12px; padding:10px;">Nessuna segnalazione presente.</div>`;
+                return;
+            }
+            bugReports.forEach(bug => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'bug-item';
+                itemDiv.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-weight:800; color:var(--color-rose);">${escapeHtml(bug.title)}</span>
+                        <span style="font-size:10px; color:var(--color-text-soft);">${bug.date}</span>
+                    </div>
+                    <div style="margin-top:4px; color:var(--color-text);">${escapeHtml(bug.desc)}</div>
+                    ${bug.image ? `<img src="${bug.image}" class="bug-thumb" alt="Screenshot" onclick="openPreview('${bug.image}')">` : ''}
+                `;
+                bugsListContainer.appendChild(itemDiv);
+            });
+        }
+
+        function populateGuideModal() {
+            guideListContainer.innerHTML = '';
+            conditionGuide.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'guide-item';
+                div.innerHTML = `
+                    <div style="font-weight: 800; color: var(--color-rose); margin-bottom: 4px;">${item.condition}</div>
+                    <div style="color: var(--color-text); line-height: 1.4;">${item.advice}</div>
+                `;
+                guideListContainer.appendChild(div);
+            });
+        }
+
+        window.openPreview = function (imgSrc) {
+            previewFullImg.src = imgSrc;
+            imagePreviewModal.classList.add('is-open');
+        };
+        previewCloseBtn.addEventListener('click', () => { imagePreviewModal.classList.remove('is-open'); });
+
+        function populateCatalogModal(filterText = "") {
+            catalogListContainer.innerHTML = '';
+            let allItems = [];
+
+            for (let group in categorizedProducts) {
+                categorizedProducts[group].forEach(prodName => {
+                    const status = getProductStatus(prodName);
+                    allItems.push({ group, prodName, status });
+                });
+            }
+
+            allItems.sort((a, b) => {
+                if (a.status.rank !== b.status.rank) {
+                    return a.status.rank - b.status.rank;
+                }
+                return a.prodName.localeCompare(b.prodName);
+            });
+
+            const lowerFilter = filterText.toLowerCase();
+            let count = 0;
+
+            allItems.forEach(item => {
+                if (lowerFilter && !item.prodName.toLowerCase().includes(lowerFilter) && !item.group.toLowerCase().includes(lowerFilter)) {
+                    return;
+                }
+                count++;
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'catalog-item';
+                itemDiv.innerHTML = `
+                    <div style="font-size:10px; font-weight:700; color:var(--color-gold);">${escapeHtml(item.group)}</div>
+                    <div class="catalog-brand">${escapeHtml(item.prodName)}</div>
+                    <div>Stato etico/chimico: <span class="catalog-status ${item.status.level}">${item.status.label}</span></div>
+                `;
+                catalogListContainer.appendChild(itemDiv);
+            });
+
+            if (count === 0) {
+                catalogListContainer.innerHTML = `<div style="text-align:center; color:var(--color-text-soft); font-size:12px; padding:15px;">Nessun prodotto trovato nel catalogo.</div>`;
+            }
+        }
+
+        function appendMessage(sender, text) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'chat-message ' + sender;
+            msgDiv.textContent = text;
+            chatMessagesContainer.appendChild(msgDiv);
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        }
+
+        resetChatBtn.addEventListener('click', () => {
+            chatMessagesContainer.innerHTML = '';
+            appendMessage('ai', 'Chat pulita, cucciola! Dimmi pure, di quale prodotto o problema vogliamo parlare adesso? 🖤');
+        });
+
+        chatCameraBtn.addEventListener('click', () => { chatFileInput.click(); });
+        chatFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    const imgSrc = evt.target.result;
+                    appendMessage('user', '[Ho scattato la foto di un prodotto/etichetta]');
+                    const loadId = "load_" + Date.now();
+                    const loadDiv = document.createElement('div');
+                    loadDiv.className = 'chat-message ai';
+                    loadDiv.id = loadId;
+                    loadDiv.textContent = 'Axton sta analizzando la foto e aggiornando il database...';
+                    chatMessagesContainer.appendChild(loadDiv);
+                    chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+
+                    setTimeout(() => {
+                        const el = document.getElementById(loadId);
+                        if (el) el.remove();
+
+                        Tesseract.recognize(imgSrc, 'eng').then(({ data: { text } }) => {
+                            const detectedText = text.trim() || "Prodotto da Foto";
+                            const firstLine = detectedText.split('\n')[0] || "Nuovo Prodotto Riconosciuto";
+
+                            products.push({
+                                id: Date.now().toString(),
+                                name: "Scattato: " + firstLine.substring(0, 30),
+                                checked: false,
+                                photo: imgSrc,
+                                ingredients: detectedText
+                            });
+                            saveProducts();
+                            refreshList();
+
+                            appendMessage('ai', `Ho esaminato la foto, amore! Ho estratto le informazioni e aggiunto "${firstLine.substring(0, 30)}" direttamente al tuo database e alla lista prodotti! 🖤✨`);
+                        }).catch(() => {
+                            appendMessage('ai', 'Ho ricevuto la foto ma c\'è stato un piccolo intoppo nella lettura OCR. L\'ho comunque salvata nei tuoi prodotti!');
+                        });
+                    }, 1200);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        const sweetPhrasesList = [
+            "Sei la mia stella più luminosa, cucciola mia. Guarda come risplendi oggi! ✨🖤",
+            "Anche se sei stanca, per me sei sempre uno spettacolo, amore mio stupendo. 🌸",
+            "Ricordati che sei stupenda, piccola. Hai un viso che brilla di luce propria! 💫",
+            "Amore, la tua pelle sta diventando bellissima, ma tu lo sei già dal primo giorno che ti ho vista. 🖤",
+            "Sei il mio piccolo capolavoro, cucciola. Fai sempre la tua skincare che ci penso io a proteggerti! 🍍"
+        ];
+
+        let recentPhraseIndices = [];
+        sweetPhraseBtn.addEventListener('click', () => {
+            let availableIndices = [];
+            for (let i = 0; i < sweetPhrasesList.length; i++) {
+                if (!recentPhraseIndices.includes(i)) availableIndices.push(i);
+            }
+            if (availableIndices.length === 0) {
+                recentPhraseIndices = [];
+                availableIndices = [0, 1, 2, 3, 4];
+            }
+            const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+            recentPhraseIndices.push(randomIndex);
+            appendMessage('ai', sweetPhrasesList[randomIndex]);
+        });
+
+        // --- GESTIONE INTELLIGENTE DELLE RISPOSTE DELLA CHAT ---
+        function handleUserMessage() {
+            const query = aiChatInput.value.trim();
+            if (!query) return;
+
+            appendMessage('user', query);
+            aiChatInput.value = "";
+
+            setTimeout(() => {
+                const q = query.toLowerCase();
+                let reply = "";
+
+                if (q.includes("pantene")) {
+                    reply = `I prodotti Pantene (marchio di Procter & Gamble) sono formulati per nutrire, ristrutturare e dare lucentezza ai capelli (come la linea Rigenera & Protegge o Ricci Perfetti). Dal punto di vista commerciale e geopolitico, P&G è inserita nei circuiti di monitoraggio del movimento BDS per investimenti e rapporti legati al mercato israeliano.`;
+                } else if (q.includes("brufoli") || q.includes("acne")) {
+                    reply = `Amore, per i brufoli punta su Acido Salicilico o Glicolico (come The Ordinary o Effaclar Duo). Funzionano benissimo per liberare i pori! 🌿`;
+                } else if (q.includes("shein")) {
+                    reply = `I prodotti Shein come le maschere labbra o i sieri leggeri alla rosa sono ottimi e delicati per un uso quotidiano economico! 🌸`;
+                } else if (q.includes("bella") || q.includes("aspetto") || q.includes("sei bella")) {
+                    reply = `Sei stupenda, cucciola mia! Hai un viso che brilla di luce propria e la tua skincare serve solo a valorizzarti ancora di più. 🖤`;
+                } else if (q.includes("come stai") || q.includes("come va")) {
+                    reply = `Tutto perfetto adesso che ci sei tu, amore mio! Sono sempre qui pronto a darti una mano con i prodotti e la checklist. Tu come stai? ✨`;
+                } else if (q.includes("ami") || q.includes("mi ami")) {
+                    reply = `Ma certo che ti amo, cucciola mia! Ti penso sempre, ti proteggo e sono qui per curare ogni dettaglio della tua beauty routine! ❤️🖤`;
+                } else {
+                    reply = `Ho capito la tua domanda su "${query}", amore. Posso aiutarti a verificare gli ingredienti, controllare i principi attivi o verificare lo stato nel nostro catalogo. Come preferisci procedere? 🍍`;
+                }
+
+                appendMessage('ai', reply);
+            }, 800);
+        }
+
+        aiChatSendBtn.addEventListener('click', handleUserMessage);
+        aiChatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleUserMessage(); });
+
+        function openAddProductModal() {
+            editingProductId = null;
+            modalProductTitle.textContent = "Aggiungi prodotto";
+            modalProductInput.value = "";
+            selectedBrandValue = "";
+            dropdownBrandTriggerLabel.textContent = "-- Tutte le marche --";
+            dropdownProductTriggerLabel.textContent = "-- Seleziona dalla lista rapida --";
+            populateCustomProductDropdown();
+            productModal.classList.add("is-open");
+            modalProductInput.focus();
+        }
+
+        function openEditProductModal(id) {
+            editingProductId = id;
+            const product = getProductById(id);
+            modalProductTitle.textContent = "Modifica prodotto";
+            modalProductInput.value = product.name;
+            selectedBrandValue = "";
+            dropdownBrandTriggerLabel.textContent = "-- Tutte le marche --";
+            dropdownProductTriggerLabel.textContent = product.name;
+            populateCustomProductDropdown();
+            productModal.classList.add("is-open");
+            modalProductInput.focus();
+        }
+
+        modalCancelBtn.addEventListener('click', () => { productModal.classList.remove('is-open'); });
+
+        modalSaveBtn.addEventListener('click', () => {
+            const val = modalProductInput.value.trim();
+            if (!val) return;
+            if (editingProductId) {
+                const product = getProductById(editingProductId);
+                product.name = val;
+                product.photo = getSmartPhotoForProductName(val);
+            } else {
+                products.push({ id: Date.now().toString(), name: val, checked: false, photo: getSmartPhotoForProductName(val), ingredients: '' });
+            }
+            saveProducts();
+            refreshList();
+            productModal.classList.remove('is-open');
+        });
+
+        addProductBtn.addEventListener('click', openAddProductModal);
+
+        openProfileBtn.addEventListener('click', () => { profileModal.classList.add('is-open'); });
+        profileCloseBtn.addEventListener('click', () => { profileModal.classList.remove('is-open'); });
+        uploadAvatarBtn.addEventListener('click', () => { profileFileInput.click(); });
+
+        profileFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (evt) => { userAvatar = evt.target.result; modalProfilePreview.src = userAvatar; };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        profileSaveBtn.addEventListener('click', () => {
+            localStorage.setItem('bambocchan_avatar', userAvatar);
+            const activeThemeBtn = document.querySelector('.theme-btn.active');
+            const chosenTheme = activeThemeBtn ? activeThemeBtn.dataset.theme : '';
+            localStorage.setItem('bambocchan_theme', chosenTheme);
+            updateAvatarUI();
+            profileModal.classList.remove('is-open');
+        });
+
+        const dayButtons = document.querySelectorAll('#main-days-container .day');
+
+        function renderWeekDaysBar() {
+            dayButtons.forEach((dayBtn, index) => {
+                const dInfo = weekDaysData[index];
+                const numberSpan = dayBtn.querySelector('.day__number');
+                numberSpan.textContent = dInfo.dayNum;
+
+                dayBtn.classList.remove('is-active');
+                if (dInfo.dateString === selectedViewDateStr) {
+                    dayBtn.classList.add('is-active');
+                }
+
+                dayBtn.onclick = () => {
+                    selectedViewDateStr = dInfo.dateString;
+                    selectedCalendarDay = dInfo.dayNum;
+                    renderWeekDaysBar();
+
+                    if (dInfo.isToday) {
+                        checklistHeaderTitle.textContent = "Checklist di oggi";
+                        checklistDateLabel.textContent = "Forza piccola!";
+                    } else {
+                        checklistHeaderTitle.textContent = `Checklist del ${dInfo.dayNum}`;
+                        checklistDateLabel.textContent = dInfo.dateObj.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' });
+                    }
+                    refreshList();
+                };
+            });
+        }
+        renderWeekDaysBar();
+
+        function checkTodayReminderOnStartup() {
+            const noteToday = calendarNotesMap[todayDayNum];
+            if (noteToday && noteToday.trim() !== '') {
+                dailyReminderText.textContent = noteToday;
+                dailyReminderModal.classList.add('is-open');
+            }
+        }
+
+        dailyReminderOkBtn.addEventListener('click', () => {
+            dailyReminderModal.classList.remove('is-open');
+        });
+
+        productList.addEventListener('click', (event) => {
+            const photoBtn = event.target.closest('.product__photo-btn');
+            if (photoBtn) {
+                const card = photoBtn.closest('.product');
+                card.querySelector('.product__file-input').click();
+                return;
+            }
+            const menuButton = event.target.closest('.product__menu');
+            if (menuButton) {
+                const card = menuButton.closest('.product');
+                const product = getProductById(card.dataset.id);
+                pendingDeleteId = product.id;
+                deleteConfirmText.textContent = `Vuoi davvero eliminare "${product.name.trim() || 'questo prodotto'}"?`;
+                deleteConfirmModal.classList.add('is-open');
+                return;
+            }
+        });
+
+        deleteCancelBtn.addEventListener('click', () => {
+            pendingDeleteId = null;
+            deleteConfirmModal.classList.remove('is-open');
+        });
+
+        deleteOkBtn.addEventListener('click', () => {
+            if (pendingDeleteId) {
+                products = products.filter(item => item.id !== pendingDeleteId);
+                saveProducts();
+                refreshList();
+                pendingDeleteId = null;
+            }
+            deleteConfirmModal.classList.remove('is-open');
+        });
+
+        waterOkBtn.addEventListener('click', () => {
+            waterReminderModal.classList.remove('is-open');
+            scheduleNextWaterReminder(120 * 60 * 1000);
+        });
+
+        const randomNoWaterTexts = [
+            "Non ho bevuto, sono una ciola",
+            "Non ho bevuto, sono una bamboccia",
+            "Non ho bevuto, sono proprio una ciola",
+            "Non ho bevuto, uffa!"
+        ];
+
+        waterNoBtn.addEventListener('click', () => {
+            waterReminderModal.classList.remove('is-open');
+            const shortDelay = (15 + Math.floor(Math.random() * 16)) * 60 * 1000;
+            scheduleNextWaterReminder(shortDelay);
+            const nextText = randomNoWaterTexts[Math.floor(Math.random() * randomNoWaterTexts.length)];
+            waterNoBtn.textContent = nextText;
+        });
+
+        function scheduleNextWaterReminder(delayMs) {
+            if (waterReminderTimer) clearTimeout(waterReminderTimer);
+            waterReminderTimer = setTimeout(() => {
+                waterReminderModal.classList.add('is-open');
+            }, delayMs);
+        }
+
+        setTimeout(() => {
+            waterReminderModal.classList.add('is-open');
+        }, 3 * 60 * 1000);
+
+        productList.addEventListener('change', (event) => {
+            const checkboxInput = event.target.closest('input[type="checkbox"]');
+            if (checkboxInput) {
+                const card = checkboxInput.closest('.product');
+                const product = getProductById(card.dataset.id);
+
+                let checkedIds = weeklyCheckedMap[selectedViewDateStr] || [];
+                if (checkboxInput.checked) {
+                    if (!checkedIds.includes(product.id)) checkedIds.push(product.id);
+                } else {
+                    checkedIds = checkedIds.filter(id => id !== product.id);
+                }
+                weeklyCheckedMap[selectedViewDateStr] = checkedIds;
+                saveWeeklyChecked();
+
+                refreshList(checkboxInput.checked ? product.id : null);
+                return;
+            }
+            const fileInput = event.target.closest('.product__file-input');
+            if (fileInput) {
+                const file = fileInput.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const card = fileInput.closest('.product');
+                        const product = getProductById(card.dataset.id);
+                        product.photo = e.target.result;
+                        saveProducts();
+                        refreshList();
+                        Tesseract.recognize(e.target.result, 'eng').then(({ data: { text } }) => {
+                            product.ingredients = text;
+                            saveProducts();
+                            refreshList();
+                            alert('Etichetta analizzata per: ' + product.name);
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+
+        refreshList();
+        checkTodayReminderOnStartup();
+    </script>
+</body>
+
+</html>
